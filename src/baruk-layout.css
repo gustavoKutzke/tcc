@@ -1,0 +1,106 @@
+/* ================================
+   BARUK LAYOUT (escopado) — desktop sem topbar, mobile com topbar
+   ================================ */
+
+:root{
+  /* fallbacks caso o theme.css não esteja carregado */
+  --brown: #4a352b;
+  --brown-dark: #3b2a22;
+  --gold: #c8a848;
+  --gold-light: #f2df9c;
+  --cream: #f8f5ef;
+}
+
+/* ===== Desktop: sidebar | main (SEM topbar) ===== */
+.baruk-shell{
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+    "sidebar main";
+  min-height: 100vh;
+  background: var(--cream);
+}
+
+/* ===== Sidebar (esquerda) ===== */
+.baruk-sidebar{
+  grid-area: sidebar;
+  background: linear-gradient(180deg, var(--brown-dark), var(--brown));
+  color: #f7ead2;
+  box-shadow: 4px 0 12px rgba(0,0,0,.08);
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* ===== Main (conteúdo) ===== */
+.baruk-main{
+  grid-area: main;
+  padding: 24px;
+  min-width: 0; /* evita overflow em grids */
+}
+
+/* ===== Topbar: desktop oculto, mobile visível ===== */
+.baruk-topbar{
+  display: none; /* desktop: não existe topbar */
+}
+
+/* ===== Mobile: topbar + drawer lateral ===== */
+@media (max-width: 900px){
+  .baruk-shell{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "topbar"
+      "main";
+  }
+
+  .baruk-topbar{
+    display: block;
+    grid-area: topbar;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    color: var(--brown-dark);
+    box-shadow: 0 4px 10px rgba(0,0,0,.06);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* padding interno opcional */
+  .baruk-topbar > *{
+    padding: 12px 18px;
+  }
+
+  .baruk-sidebar{
+    position: fixed;
+    left: -270px;
+    top: 0;
+    bottom: 0;
+    width: 240px;
+    height: 100vh;
+    z-index: 50;
+    transition: left .25s ease;
+  }
+  .baruk-shell.is-open .baruk-sidebar{
+    left: 0;
+  }
+
+  .baruk-main{
+    padding: 18px;
+  }
+}
+
+/* botão hamburguer genérico */
+.baruk-menu-btn{
+  background: transparent;
+  border: 0;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.baruk-menu-btn:hover{
+  background: rgba(0,0,0,.06);
+}

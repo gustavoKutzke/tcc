@@ -1,0 +1,318 @@
+/* ============================================
+   🌟 TEMA GLOBAL - BARUK STYLE
+   Autor: Gustavo Kutzke
+   Versão: 1.1 (PDI com campos maiores)
+   ============================================ */
+
+:root {
+  /* 🎨 Paleta principal */
+  --brown: #4a352b;
+  --brown-dark: #2b211b;
+  --gold: #c8a848;
+  --gold-light: #f2df9c;
+  --cream: #f8f5ef;
+  --text: #3e2c22;
+  --muted: #7b6c64;
+
+  /* ⚙️ Layout */
+  --radius: 14px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: 0.25s ease;
+
+  /* extras */
+  --border: rgba(0,0,0,.08);
+  --surface: #fff;
+}
+
+/* ===========================
+   🌍 BASE GERAL
+   =========================== */
+html, body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Barra de rolagem personalizada */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 8px; }
+
+/* ===========================
+   🔠 TIPOGRAFIA
+   =========================== */
+h1, h2, h3, h4, h5 {
+  color: var(--brown-dark);
+  margin: 0 0 8px;
+  font-weight: 900;
+}
+h2.section-title {
+  font-size: 1.8rem;
+  border-left: 6px solid var(--gold);
+  padding-left: 10px;
+  color: var(--brown-dark);
+}
+p.muted { color: var(--muted); font-size: 0.95rem; }
+
+/* ===========================
+   🧱 COMPONENTES
+   =========================== */
+
+/* === Cards === */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+.card:hover { transform: translateY(-2px); }
+
+/* === Botões === */
+button, .btn {
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 10px 18px;
+  transition: var(--transition);
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--brown-dark);
+  box-shadow: 0 3px 6px rgba(200, 168, 72, 0.3);
+}
+.btn-primary:hover { background: linear-gradient(135deg, var(--gold-light), var(--gold)); }
+.btn { background: var(--brown); color: #fff; }
+.btn:hover { background: var(--brown-dark); }
+
+/* === Inputs e Selects === */
+input, select, textarea {
+  border: 1px solid #e9e1d8;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition);
+  background: #fff;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200, 168, 72, 0.2);
+}
+
+/* Tamanhos “conforto” para PDI */
+.input-lg { padding: 10px 12px; }
+.textarea-lg { padding: 10px 12px; line-height: 1.35; }
+
+/* === Grid padrão === */
+.grid { display: grid; gap: 16px; }
+
+/* === Avatar circular === */
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brown-dark), var(--brown));
+  color: var(--gold-light);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; border: 2px solid var(--cream);
+}
+
+/* === Links === */
+a { color: var(--gold); text-decoration: none; font-weight: 600; }
+a:hover { text-decoration: underline; }
+
+/* === Tags de status (metas) === */
+.tag {
+  display: inline-block; padding: 4px 10px; border-radius: 999px;
+  font-weight: 700; font-size: 0.85rem;
+}
+.tag.aberta { color: var(--muted); background: #fff; border: 1px solid #e5d7b8; }
+.tag.concluida { color: var(--brown-dark); background: rgba(200,168,72,.15); border: 1px solid var(--gold); }
+
+/* === Rodapé (opcional) === */
+.footer {
+  text-align: center; color: var(--muted); font-size: 0.8rem;
+  padding: 16px 0; margin-top: 30px;
+}
+
+/* ===== Largura/rolagem específica do PDI ===== */
+.pdi-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px; /* espaço para a barra de rolagem */
+}
+
+/* A grade interna ganha uma largura mínima maior para “abrir” as colunas */
+.pdi-grid {
+  min-width: 1600px; /* aumente para 1700/1800 se quiser mais largo */
+}
+
+@media (min-width: 1440px) {
+  .pdi-grid { min-width: 1800px; }
+}
+
+/* Inputs/áreas um pouco mais altos para acompanhar a largura extra */
+.input-lg,
+.textarea-lg {
+  padding: 12px 14px;
+  font-size: 1rem;
+}
+
+/* ====== FOLHA PDI – impressão ====== */
+.pdi-print-wrap {
+  background: #eae7df;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.pdi-sheet {
+  margin: 0 auto;
+  background: #fff;
+  color: var(--text);
+  font-family: "Inter","Segoe UI",Roboto,sans-serif;
+  border: 1px solid #d8d2c8;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  padding: 18px 18px 24px 18px;
+}
+
+/* 297mm x 210mm paisagem */
+.a4-landscape {
+  width: 1123px;   /* ~ 297mm @96dpi */
+  min-height: 794px; /* ~ 210mm @96dpi */
+}
+
+/* Barra sup. de comandos (não imprime) */
+.print-toolbar {
+  display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 8px;
+}
+.no-print { }
+@media print {
+  .no-print { display: none !important; }
+  .pdi-print-wrap { background: #fff; padding: 0; }
+  .pdi-sheet { box-shadow: none; border: none; }
+  @page { size: A4 landscape; margin: 10mm; }
+}
+
+/* Cabeçalho da folha */
+.sheet-header {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.sheet-header .brand {
+  font-weight: 900; color: var(--brown-dark);
+  border: 2px solid var(--gold);
+  padding: 6px 10px; border-radius: 10px;
+}
+.sheet-header .title {
+  font-weight: 900; font-size: 1.1rem; color: var(--brown-dark);
+  text-align: right;
+}
+
+/* Metadados */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.meta-grid > div {
+  border: 2px solid #e5d7b8;
+  border-radius: 10px;
+  padding: 6px 8px;
+  min-height: 38px;
+  display: flex; align-items: center; gap: 6px;
+  font-weight: 600;
+}
+.meta-grid > div span {
+  color: var(--muted); font-weight: 800; margin-right: 4px;
+}
+
+/* Títulos de bloco */
+.block-title {
+  font-weight: 900; color: var(--brown-dark);
+  background: rgba(200,168,72,.15);
+  border-left: 6px solid var(--gold);
+  padding: 6px 10px; border-radius: 10px;
+  margin: 8px 0 8px;
+}
+
+/* Grade do plano (grande, com bordas arredondadas) */
+.grid.header, .grid.row {
+  display: grid;
+  grid-template-columns: 2.4fr 2.0fr 1.8fr 1.2fr 2.0fr 2.0fr 1.2fr;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.grid.header {
+  font-weight: 900; color: var(--brown-dark);
+  margin-bottom: 6px;
+}
+
+.grid.row + .grid.row { margin-top: 6px; }
+
+.grid .exec-header {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+  align-items: center;
+}
+.grid .exec-header .exec-title {
+  grid-column: 1 / span 2;
+  text-transform: uppercase;
+  font-weight: 900; color: #4a342a;
+  text-align: center;
+  border: 2px solid #e5d7b8; border-radius: 10px; padding: 3px 0;
+  background: #fff;
+}
+.grid .exec-header .exec-sub {
+  text-align: center; font-weight: 800; color: var(--muted);
+}
+
+.cell {
+  border: 2px solid #e5d7b8;
+  border-radius: 12px;
+  min-height: 40px;
+  padding: 6px 8px;
+  background: #fff;
+  display: flex; align-items: center;
+  font-weight: 600;
+}
+.cell.large {
+  min-height: 64px; /* caixas maiores, como na folha */
+  align-items: flex-start;
+}
+
+/* Execução (2 linhas internas) */
+.cell.exec {
+  display: grid; grid-template-rows: 1fr 1fr; gap: 4px;
+  padding: 4px;
+}
+.cell.exec > div {
+  border: 2px solid #e5d7b8; border-radius: 8px;
+  padding: 4px 6px; min-height: 24px; background: #fff; font-weight: 600;
+}
+
+/* sem linhas */
+.no-rows {
+  border: 2px dashed #e5d7b8; border-radius: 12px;
+  padding: 12px; text-align: center; color: var(--muted);
+}
+
+/* Execução rodapé (parecido com bloco da folha) */
+.exec-footer {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.exec-footer > div {
+  border: 2px solid #e5d7b8; border-radius: 10px;
+  padding: 6px 8px; font-weight: 700; background: #fff;
+}
+.exec-footer > div span { color: var(--muted); font-weight: 900; margin-right: 6px; }
+

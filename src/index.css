@@ -1,13 +1,170 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "./theme.css";
+@import "./baruk-layout.css";
+
+:root{
+  --bg: #f6f3ef;
+  --surface: #ffffff;
+  --text: #2b211b;
+  --subtle: #7b6c64;
+  --border: #e9e1d8;
+  --brown: #3e2c22;
+  --brown-2: #4a352b;
+  --gold: #c8a848;
+  --ring: rgba(200,168,72,.35);
+  --shadow: 0 8px 24px rgba(0,0,0,.06);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+
+*{ box-sizing: border-box; }
+html, body, #root{ height: 100%; }
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
 }
+
+/* ===== LAYOUT (dashboard com sidebar) ===== */
+.app{
+  height: 100%;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.sidebar{
+  background: linear-gradient(180deg, var(--brown), var(--brown-2));
+  color: #f7ead2;
+  display:flex; flex-direction:column;
+  padding: 20px 16px;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.brand{
+  display:flex; align-items:center; gap:10px; padding: 6px 8px; margin-bottom: 14px;
+}
+.brand .badge{
+  width:28px; height:28px; border-radius:9px; background: rgba(255,255,255,.14);
+  position:relative;
+}
+.brand .badge::after{
+  content:""; position:absolute; inset:5px; border-radius:7px;
+  background: linear-gradient(135deg, var(--gold), #f2df9c);
+  opacity:.9;
+}
+.brand .name{ font-weight: 800; letter-spacing:.3px; }
+
+.nav{
+  display:flex; flex-direction:column; gap: 6px; margin-top: 6px;
+}
+.nav a, .nav button{
+  appearance:none; border:none; background:transparent; text-align:left;
+  color:#f7ead2; text-decoration:none;
+  padding:10px 12px; border-radius:12px; font-weight:600; cursor:pointer;
+}
+.nav a:hover, .nav button:hover{ background: rgba(255,255,255,.10); }
+.nav .active{
+  background: rgba(255,255,255,.18);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
+}
+
+/* conteúdo */
+.main{
+  min-height: 100%;
+  padding: 28px;
+  display:flex; justify-content:center;
+}
+.content{
+  width: 100%;
+  max-width: 1040px;
+}
+.section-title{
+  font-weight: 900; margin: 0 0 14px 0;
+}
+.grid{ display: grid; gap: 16px; }
+@media (min-width: 860px){ .grid{ grid-template-columns: 1fr 1fr; } }
+
+.card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.card h3{ margin: 0 0 8px 0; }
+.muted{ color: var(--subtle); font-size: 14px; }
+
+.input, .select, .textarea{
+  width:100%; padding:10px 12px; border-radius: 10px; border:1px solid var(--border); background:#fff; outline:none;
+}
+.input:focus, .select:focus, .textarea:focus{
+  border-color: var(--gold); box-shadow: 0 0 0 4px var(--ring);
+}
+.btn{ padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#fff; cursor:pointer; font-weight:700; }
+.btn-primary{ border:none; background: linear-gradient(135deg, var(--gold), #f1d574); color:#3b2c16; }
+.btn-row{ display:flex; gap: 10px; flex-wrap: wrap; }
+
+/* responsivo: sidebar compacta em telas menores */
+@media (max-width: 780px){
+  .app{ grid-template-columns: 80px 1fr; }
+  .brand .name{ display:none; }
+  .nav a span{ display:none; }
+}
+
+/* ===== AUTH (login/cadastro) ===== */
+
+/* fundo dourado -> marrom e centralização do card */
+.container-auth{
+  min-height: 100vh;
+  display: flex;                 /* força centralização real */
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+
+  /* fundo do login */
+  background: linear-gradient(135deg, #c8a848, #4a352b);
+}
+
+/* card do login bem definido e estreito */
+.container-auth .card{
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;               /* garante central mesmo se algo mudar */
+  background: #fff;
+  border: 1px solid #e5d7b8;
+  border-radius: 18px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.20);
+}
+
+/* marca do login */
+.brand-auth{
+  display:flex; align-items:center; justify-content:center; gap:10px; 
+  margin-bottom: 10px; color: var(--text); font-weight: 800;
+}
+.brand-auth .badge{
+  width:28px; height:28px; border-radius:9px; background: rgba(0,0,0,.06);
+  position:relative;
+}
+.brand-auth .badge::after{
+  content:""; position:absolute; inset:5px; border-radius:7px;
+  background: linear-gradient(135deg, var(--gold), #f2df9c);
+  opacity:.95;
+}
+
+/* abas do login */
+.tabs{
+  margin-top: 14px;
+  background:#f3e9d2;          /* bege suave */
+  border-radius: 12px;
+  padding: 4px;
+  display:flex; gap: 6px;
+}
+.tab{
+  flex: 1;
+  padding:10px 12px; border-radius:10px; border:none; cursor:pointer;
+  background: transparent; color: #7b6c64; font-weight: 700;
+}
+.tab.active{
+  background: #fff; color: #4a342a;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+
+/* texto auxiliar */
+.help{ font-size:12px; color: var(--subtle); text-align:center; }

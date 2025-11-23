@@ -7,9 +7,16 @@
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "date-fns": "^4.1.0",
+    "firebase": "^12.5.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router-dom": "^6.28.0",
     "react-scripts": "5.0.1",
+    "recharts": "^3.3.0",
+    "signature_pad": "^5.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -34,6 +41,23 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      
+      "src/pages/PDI.js",
+      "src/pages/Goals.js",
+
+     
+      "src/services/pdiService.js",
+      "src/services/goalsService.js",
+
+      
+      "!src/lib/firebase.js",
+      "!src/utils/**",
+      "!src/**/*.styles.{js,jsx,ts,tsx}",
+      "!src/**/*.test.{js,jsx,ts,tsx}"
     ]
   }
 }

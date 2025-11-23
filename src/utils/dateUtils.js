@@ -21,8 +21,10 @@ export function getMonthRange(monthKey) {
   return { start, end };
 }
 
-// Alias para compatibilidade com imports antigos
-export { getMonthRange as monthRange };
+// 👇 alias para manter compatibilidade com imports antigos
+export function monthRange(monthKey) {
+  return getMonthRange(monthKey);
+}
 
 /**
  * Últimos N meses (inclui o mês atual)
@@ -95,6 +97,6 @@ export function enumerateDays(start, endExcl) {
  */
 export function formatBr(iso) {
   if (!iso || typeof iso !== "string") return "";
-  const [y, m, d] = iso.split("-");
+  const [, m, d] = iso.split("-"); // ignora o ano pra não dar no-unused-vars
   return `${d}/${m}`;
 }

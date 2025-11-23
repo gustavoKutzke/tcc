@@ -9,16 +9,8 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-// certo
-import {
-  monthRange,
-  lastNMonths,
-  brMonthLabel,
-  enumerateDays,
-  isoDate,
-  formatBr,
-} from "../utils/dateUtils";
-
+// Importa só o que realmente é usado neste arquivo
+import { getMonthRange, enumerateDays, isoDate } from "../utils/dateUtils";
 
 /* ===== Carrega times existentes (para o filtro) ===== */
 
@@ -38,7 +30,7 @@ export async function loadTeams() {
 /* ===== Cálculo principal de insights (metas + kudos) ===== */
 
 export async function loadInsightsForManager({ month, team = "all" }) {
-  const { start, end } = monthRange(month);
+  const { start, end } = getMonthRange(month);
   const startTs = Timestamp.fromDate(start);
   const endTs = Timestamp.fromDate(end);
 

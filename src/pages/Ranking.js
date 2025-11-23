@@ -793,12 +793,7 @@ function BarChart({ data, height = 260, padding = 32 }) {
             </g>
           );
         })}
-        <text
-          x={padding}
-          y={padding - 10}
-          fontSize="12"
-          fill="#7b6c64"
-        >
+        <text x={padding} y={padding - 10} fontSize="12" fill="#7b6c64">
           Pontos
         </text>
       </svg>
@@ -817,8 +812,7 @@ function LineChartDaily({ data, metric = "points", height = 240, padding = 32 })
     const x =
       padding +
       (data.length <= 1 ? plotW / 2 : (plotW * i) / (data.length - 1));
-    const y =
-      padding + (plotH - (values[i] / maxVal) * plotH);
+    const y = padding + (plotH - (values[i] / maxVal) * plotH);
     return { x, y, v: values[i], label: d.date };
   });
 
@@ -848,12 +842,7 @@ function LineChartDaily({ data, metric = "points", height = 240, padding = 32 })
           );
         })}
 
-        <path
-          d={pathD}
-          fill="none"
-          stroke="#c8a848"
-          strokeWidth="2.5"
-        />
+        <path d={pathD} fill="none" stroke="#c8a848" strokeWidth="2.5" />
         {points.length > 1 && (
           <path
             d={`${pathD} L ${padding + plotW},${
@@ -865,13 +854,7 @@ function LineChartDaily({ data, metric = "points", height = 240, padding = 32 })
 
         {points.map((p, i) => (
           <g key={i}>
-            <circle
-              cx={p.x}
-              cy={p.y}
-              r="4"
-              fill="#c8a848"
-              stroke="#4a352b"
-            />
+            <circle cx={p.x} cy={p.y} r="4" fill="#c8a848" stroke="#4a352b" />
             <text
               x={p.x}
               y={p.y - 8}
@@ -899,12 +882,7 @@ function LineChartDaily({ data, metric = "points", height = 240, padding = 32 })
           </g>
         ))}
 
-        <text
-          x={padding}
-          y={padding - 10}
-          fontSize="12"
-          fill="#7b6c64"
-        >
+        <text x={padding} y={padding - 10} fontSize="12" fill="#7b6c64">
           {metric === "points" ? "Pontos/dia" : "Metas/dia"}
         </text>
       </svg>
@@ -990,12 +968,7 @@ function LineChartCompare({
           strokeDasharray="6 6"
         />
         {/* período atual (sólido dourado) */}
-        <path
-          d={path(pNow)}
-          fill="none"
-          stroke="#c8a848"
-          strokeWidth="2.5"
-        />
+        <path d={path(pNow)} fill="none" stroke="#c8a848" strokeWidth="2.5" />
 
         {/* pontos do período atual */}
         {pNow.map((p, i) => (
@@ -1024,12 +997,7 @@ function LineChartCompare({
           </g>
         ))}
 
-        <text
-          x={padding}
-          y={padding - 10}
-          fontSize="12"
-          fill="#7b6c64"
-        >
+        <text x={padding} y={padding - 10} fontSize="12" fill="#7b6c64">
           {metric === "points" ? "Pontos/dia" : "Metas/dia"}
         </text>
       </svg>
@@ -1069,7 +1037,7 @@ function enumerateDays(start, endExcl) {
 }
 function formatBr(iso) {
   if (!iso || typeof iso !== "string") return "";
-  const [y, m, d] = iso.split("-");
+  const [, m, d] = iso.split("-"); // ignora o ano pra não gerar var não usada
   return `${d}/${m}`;
 }
 function shorten(str, max) {

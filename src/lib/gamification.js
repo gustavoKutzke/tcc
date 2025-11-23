@@ -23,18 +23,18 @@
  *  1. Economia de Pontos – Tabela oficial de XP do TCC
  * ========================================================= */
 export const XP_SOURCES = {
-  goalNormal: 10,           // meta comum concluída
-  goalPdi: 15,              // meta ligada ao PDI (via metas)
-  kudosReceived: 2,         // cada kudos recebido
-  kudosSent: 1,             // cada kudos enviado
-  feedbackReceived: 3,      // receber feedback formal
-  feedbackSent: 4,          // enviar feedback estruturado
+  goalNormal: 10, // meta comum concluída
+  goalPdi: 15, // meta ligada ao PDI (via metas)
+  kudosReceived: 2, // cada kudos recebido
+  kudosSent: 1, // cada kudos enviado
+  feedbackReceived: 3, // receber feedback formal
+  feedbackSent: 4, // enviar feedback estruturado
   dailyMissionsAllDone: 10, // já usado no Career (+10)
   weeklyMissionsAllDone: 20,
 
   // 🔹 PDI como campanha de desenvolvimento
-  pdiItem: 10,              // cada ação (item) do PDI concluída
-  pdiCompleted: 50,         // concluir um PDI inteiro
+  pdiItem: 10, // cada ação (item) do PDI concluída
+  pdiCompleted: 50, // concluir um PDI inteiro
 };
 
 /**
@@ -372,7 +372,7 @@ export function computePdiStats(plans = []) {
 export function computeBadges(context = {}) {
   const {
     totalPoints = 0,
-    goals = [],
+    // goals removido para evitar no-unused-vars
     kudosReceivedThisMonth = 0,
     goalStreakDays = 0,
 
@@ -443,7 +443,6 @@ export function computeBadges(context = {}) {
 
   return badges;
 }
-
 
 /** =========================================================
  *  9. Função de pontuação com multiplicador

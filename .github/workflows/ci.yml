@@ -1,0 +1,58 @@
+name: CI - Frontend e Backend
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  frontend:
+    name: Testes do Frontend (React)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Instalar dependências do frontend
+        run: npm ci
+
+      - name: Rodar testes do frontend com coverage
+        run: npm test -- --watch=false --coverage
+
+      - name: Garantir que o build do frontend funciona
+        run: npm run build
+
+  backend:
+    name: Testes do Backend (Cloud Functions)
+    runs-on: ubuntu-latest
+
+    # se quiser rodar só se o frontend passar, descomente:
+    # needs: frontend
+
+    defaults:
+      run:
+        working-directory: functions
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Instalar dependências do backend
+        run: npm ci
+
+      - name: Rodar testes do backend com coverage
+        run: npm test -- --runInBand --coverage

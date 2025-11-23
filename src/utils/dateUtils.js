@@ -21,6 +21,9 @@ export function getMonthRange(monthKey) {
   return { start, end };
 }
 
+// Alias para compatibilidade com imports antigos
+export { getMonthRange as monthRange };
+
 /**
  * Últimos N meses (inclui o mês atual)
  * Retorna array de monthKey (YYYY-MM)

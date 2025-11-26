@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-admin.initializeApp(); // ✅ tem que ser a PRIMEIRA coisa
+admin.initializeApp(); //  tem que ser a PRIMEIRA coisa
 
 // HTTP
 const { health } = require("./health");

@@ -16,35 +16,35 @@ import {
 import { computeEffectivePoints } from "../lib/gamification";
 
 /**
- * TABELA CENTRAL DE XP
+  TABELA CENTRAL DE XP
  */
 export const XP_VALUES = {
-  // Metas
+  
   GOAL_NORMAL: 20,
   GOAL_DIFFICULT: 40,
   GOAL_PDI: 50,
   GOAL_SEASON_BONUS: 10,
 
-  // Missões
+ 
   DAILY_MISSIONS_ALL_DONE: 10,
   WEEKLY_MISSIONS_ALL_DONE: 30,
 
-  // Kudos
+  
   KUDOS_RECEIVED_PER_POINT: 2,
   KUDOS_SENT_BONUS: 5,
 
-  // Feedbacks
+  
   FEEDBACK_RECEIVED: 5,
   FEEDBACK_SENT: 8,
 
-  // PDI
+  
   PDI_ITEM_COMPLETED: 10,
   PDI_PLAN_COMPLETED: 50,
 
-  // DISC
+  
   DISC_FIRST_RESULT: 100,
 
-  // Default
+  
   CUSTOM_DEFAULT: 5,
 };
 
@@ -78,7 +78,7 @@ async function incrementUserPoints(uid, delta) {
   });
 }
 
-/** Registra log em /xpLog */
+/** Registra log */
 async function logXp({
   uid,
   source,
@@ -147,7 +147,7 @@ export async function awardXpToUser({
 
   const fullMeta = meta ?? metadata ?? null;
 
-  // Lógica de multiplicadores centralizada
+  // Vou computar os dados entre Padrão - se é Uma Streak ou por temporada
   const { finalPoints, appliedMultiplier } = computeEffectivePoints(
     numericBase,
     { isSeasonGoal, isStreakDay }
@@ -175,7 +175,7 @@ export async function awardXpToUser({
     finalPoints: safeFinal,
   });
 
-  // TOAST DE XP 
+  
   emitXpToast({
     uid,
     source,
@@ -261,7 +261,7 @@ export async function grantKudosReceivedXp({ uid, value, meta }) {
   });
 }
 
-// Pequeno bônus ao enviar kudos
+// bônus ao enviar kudos
 export async function grantKudosSentXp({ uid, meta }) {
   return awardXpToUser({
     uid,
@@ -346,7 +346,7 @@ export async function grantDiscFirstResultXp({ uid, meta }) {
   });
 }
 
-// XP totalmente customizado (usado quando precisar)
+// XP totalmente customizado se precisar utilizar
 export async function grantCustomXp({
   uid,
   basePoints,

@@ -3,7 +3,7 @@ const db = admin.firestore();
 
 const { onDocumentUpdated } = require("firebase-functions/v2/firestore");
 
-// mesmos valores do teu front:
+
 const XP_VALUES = {
   GOAL_NORMAL: 20,
   GOAL_DIFFICULT: 40,

@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import "./theme.css";
 
-// 🔥 Provider de toasts
+
 import { ToastXPProvider } from "./components/ToastXP";
 
 import Auth from "./pages/Auth";

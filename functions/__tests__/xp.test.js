@@ -1,13 +1,13 @@
 // functions/__tests__/xp.test.js
 
-// Mock de firebase-functions: https.onRequest só devolve o handler
+// Mock de firebase
 jest.mock("firebase-functions", () => ({
   https: {
     onRequest: (handler) => handler,
   },
 }));
 
-// Mocks globais (nomes começando com "mock" pra evitar erro do Jest)
+// Mocks globais
 const mockUpdate = jest.fn();
 const mockAdd = jest.fn();
 const mockIncrement = jest.fn((n) => n);
@@ -52,7 +52,7 @@ jest.mock("firebase-admin", () => {
 //IMPORTA O MÓDULO DEPOIS dos mocks
 const { grantXp } = require("../xp");
 
-// helper simples de response fake (imitando Express)
+// helper simples de response fake
 function makeRes() {
   return {
     statusCode: 200,

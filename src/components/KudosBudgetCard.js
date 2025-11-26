@@ -33,7 +33,7 @@ export default function KudosBudgetCard() {
   const mk = useMemo(() => monthKeyFromDate(), []);
   const isManager = me?.role === "gestor";
 
-  // pega meu perfil (para saber o role)
+  // pega meu perfil 
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(async (u) => {
       if (!u) return setMe(null);

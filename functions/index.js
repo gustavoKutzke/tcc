@@ -1,11 +1,11 @@
 const admin = require("firebase-admin");
-admin.initializeApp(); //  tem que ser a PRIMEIRA coisa
+admin.initializeApp(); 
 
-// HTTP
+
 const { health } = require("./health");
 const { grantXp } = require("./xp");
 
-// Triggers Firestore
+
 const { onKudosCreated } = require("./kudos");
 const { onGoalUpdated } = require("./goals");
 const { onPdiItemUpdated, onPdiPlanUpdated } = require("./pdi");

@@ -15,7 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 
-/** Busca dados básicos do usuário para a loja */
+
 export async function fetchCurrentUserForShop(uid) {
   if (!uid) return null;
   try {
@@ -30,7 +30,7 @@ export async function fetchCurrentUserForShop(uid) {
   }
 }
 
-/** Listener do catálogo de recompensas */
+
 export function subscribeRewards(callback) {
   const qy = query(collection(db, "rewards"), orderBy("createdAt", "desc"));
   return onSnapshot(qy, (snap) => {
@@ -38,7 +38,7 @@ export function subscribeRewards(callback) {
   });
 }
 
-/** Listener de resgates: gestor vê todos, colaborador só os seus */
+
 export function subscribeRedemptions({ uid, isManager, callback }) {
   let qy;
   if (isManager) {
@@ -75,7 +75,7 @@ export async function deleteReward(id) {
   await deleteDoc(doc(db, "rewards", id));
 }
 
-/** Colaborador: resgatar item (debita pontos e cria redemptions) */
+/** Colaborador: resgatar item */
 export async function redeemReward({ user, reward }) {
   await runTransaction(db, async (tx) => {
     const meRef = doc(db, "users", user.uid);

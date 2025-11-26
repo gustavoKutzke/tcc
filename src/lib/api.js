@@ -3,7 +3,7 @@ import { auth } from "./firebase";
 
 const FUNCTIONS_BASE =
   "https://us-meutcc-5bacf.cloudfunctions.net"; 
-// ⬆️ troca SEU_PROJETO pelo id real que aparece na URL
+
 
 async function getIdToken() {
   const u = auth.currentUser;

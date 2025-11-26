@@ -12,10 +12,10 @@ import {
   where,
 } from "firebase/firestore";
 
-// pega usuário + role a partir de /users (já usamos em outras telas)
+
 import { listenCurrentUser } from "../services/userService";
 
-// novo service de metas
+
 import {
   createGoal,
   deleteGoalById,
@@ -24,18 +24,13 @@ import {
   toggleGoalStatus,
 } from "../services/goalsService";
 
-/**
- * Página de Metas
- * - Gestor: cria/filtra/lista/atualiza/exclui metas
- * - Colaborador: visualiza SOMENTE as metas atribuídas a ele (read-only)
- */
 
 const UPDATE_USER_POINTS = true;
 
 export default function Goals() {
   const navigate = useNavigate();
 
-  // segue padrão das outras páginas: se não estiver logado, manda pro /auth
+  
   useEffect(
     () => auth.onAuthStateChanged((u) => !u && navigate("/auth")),
     [navigate]
@@ -55,11 +50,11 @@ export default function Goals() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [points, setPoints] = useState(50);
-  const [due, setDue] = useState(""); // yyyy-mm-dd
+  const [due, setDue] = useState(""); 
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
 
-  // **Preview da carreira do colaborador selecionado**
+  
   const [careerPreview, setCareerPreview] = useState(null);
 
   // --- DADOS ---
@@ -70,7 +65,7 @@ export default function Goals() {
   const [fUser, setFUser] = useState("all");
   const [fStatus, setFStatus] = useState("all");
 
-  // Carrega colaboradores (apenas GESTOR)
+  // Carrega colaboradores 
   useEffect(() => {
     if (userData?.role !== "gestor") return;
     const qUsers = query(
@@ -84,7 +79,7 @@ export default function Goals() {
     return () => unsub();
   }, [userData?.role]);
 
-  // Carrega metas (usa service, variando pela role)
+  // Carrega metas 
   useEffect(() => {
     if (!userData) return;
 
@@ -103,7 +98,7 @@ export default function Goals() {
     };
   }, [userData, fUser, fStatus]);
 
-  // Busca carreira do colaborador selecionado (para o preenchimento rápido)
+  
   useEffect(() => {
     if (!ownerUid || userData?.role !== "gestor") {
       setCareerPreview(null);
@@ -160,14 +155,14 @@ export default function Goals() {
 
   function prefillFromCareer() {
     if (!careerPreview) return;
-    // título sugerido + descrição baseada no marco
+   
     const suggestedTitle = careerPreview.role
       ? `Marco de Carreira: ${careerPreview.role}`
       : "Marco de Carreira";
 
     setTitle(suggestedTitle);
     setDesc(careerPreview.nextMilestone || "");
-    // defaults: 100 pts e prazo para 30 dias se não houver nada
+    
     if (!points) setPoints(100);
     if (!due) {
       const d = new Date();
@@ -208,7 +203,7 @@ export default function Goals() {
     );
   }
 
-  // ------- Vista do COLABORADOR (somente leitura) -------
+  // ------- Vista do COLABORADOR -------
   if (userData.role === "colaborador") {
     return (
       <>
@@ -258,7 +253,7 @@ export default function Goals() {
               ))}
             </select>
 
-            {/* Atalho: preencher do marco (se houver no perfil) */}
+            {}
             {careerPreview?.nextMilestone && (
               <div className="btn-row" style={{ marginTop: 8 }}>
                 <button

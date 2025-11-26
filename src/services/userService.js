@@ -14,9 +14,7 @@ import {
 } from "firebase/firestore";
 import { awardXpToUser, XP_SOURCES } from "./xpService";
 
-/**
- * Cria/atualiza o perfil básico de usuário em /users.
- */
+
 export async function upsertUserProfile(uid, data = {}) {
   if (!uid) throw new Error("uid é obrigatório para criar/atualizar usuário");
 
@@ -36,9 +34,7 @@ export async function upsertUserProfile(uid, data = {}) {
   }
 }
 
-/**
- * Escuta o usuário logado + documento em /users em tempo real.
- */
+
 export function listenCurrentUser(setUser) {
   let userDocUnsub = null;
 
@@ -96,7 +92,7 @@ export function listenCurrentUser(setUser) {
 }
 
 /**
- * Bônus diário de missões — totalmente integrado ao XP central.
+  Bônus diário de missões
  */
 export async function updateDailyMissionsBonus(
   uid,
@@ -112,7 +108,7 @@ export async function updateDailyMissionsBonus(
   if (numericBonus !== 0) {
     await awardXpToUser({
       uid,
-      amount: numericBonus,                 // assinatura nova
+      amount: numericBonus,                 
       source: XP_SOURCES.DAILY_MISSIONS,
       metadata: { date: todayKey },
     });
@@ -123,9 +119,7 @@ export async function updateDailyMissionsBonus(
   });
 }
 
-/**
- * Ranking: escuta todos os usuários ordenados por pontos (desc).
- */
+
 export function listenUsersByPoints(callback) {
   const qUsers = query(collection(db, "users"), orderBy("points", "desc"));
   const unsub = onSnapshot(qUsers, (snap) => {

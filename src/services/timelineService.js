@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { computeBadges } from "../lib/gamification";
 
-/** Buscar dados básicos do usuário para a Timeline */
+
 export async function fetchCurrentUserForTimeline(uid) {
   if (!uid) return null;
   try {
@@ -27,7 +27,7 @@ export async function fetchCurrentUserForTimeline(uid) {
   }
 }
 
-/** Gestor: assinar lista de colaboradores */
+
 export function subscribeCollaborators(callback) {
   const qUsers = query(
     collection(db, "users"),
@@ -45,7 +45,7 @@ export async function fetchTimelineEvents({ subjectUid, monthKey, start, end }) 
 
   const list = [];
 
-  // --- Metas concluídas no mês (ownerUid == subject) ---
+  //Metas concluídas no mês
   const qGoals = query(
     collection(db, "goals"),
     where("ownerUid", "==", subjectUid)
@@ -65,7 +65,7 @@ export async function fetchTimelineEvents({ subjectUid, monthKey, start, end }) 
     });
   });
 
-  // --- Kudos recebidos no mês ---
+  // Kudos recebidos no mês
   const qKIn = query(
     collection(db, "kudos"),
     where("toUid", "==", subjectUid),
@@ -86,7 +86,7 @@ export async function fetchTimelineEvents({ subjectUid, monthKey, start, end }) 
     });
   });
 
-  // --- Kudos enviados no mês ---
+  //Kudos enviados no mês
   const qKOut = query(
     collection(db, "kudos"),
     where("fromUid", "==", subjectUid),
@@ -107,7 +107,7 @@ export async function fetchTimelineEvents({ subjectUid, monthKey, start, end }) 
     });
   });
 
-  // --- Feedbacks recebidos no mês ---
+  // Feedbacks recebidos no mês 
   const qFb = query(
     collection(db, "feedbacks"),
     where("collaboratorUid", "==", subjectUid)
@@ -125,7 +125,7 @@ export async function fetchTimelineEvents({ subjectUid, monthKey, start, end }) 
     });
   });
 
-  // --- Conquistas (badges) ---
+  // Conquistas
   const allGoalsSnap = await getDocs(
     query(collection(db, "goals"), where("ownerUid", "==", subjectUid))
   );
@@ -164,11 +164,11 @@ export async function fetchTimelineEvents({ subjectUid, monthKey, start, end }) 
     let badgeDate = null;
 
     if (monthGoalsDone.length > 0) {
-      // usa a data da última meta concluída no mês
+      
       badgeDate =
         monthGoalsDone[monthGoalsDone.length - 1].completedAt.toDate();
     } else if (pdiLastCompletedAt && pdiLastCompletedAt >= start && pdiLastCompletedAt < end) {
-      // se não teve meta no mês, mas concluiu PDI neste mês, usa essa data
+      
       badgeDate = pdiLastCompletedAt;
     }
 
@@ -183,7 +183,7 @@ export async function fetchTimelineEvents({ subjectUid, monthKey, start, end }) 
     }
   }
 
-  // ordenar por data desc
+  
   list.sort((a, b) => b.at - a.at);
   return list;
 }

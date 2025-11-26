@@ -11,18 +11,12 @@ import {
   where,
 } from "firebase/firestore";
 
-// ✅ TROCA: agora usa o service que já aplica XP e loga no xpLog
 import { sendKudosWithXp } from "../services/kudosService";
 
-/**
- * Props:
- *  - open: boolean
- *  - onClose: fn
- *  - presetToUid?: string   // opcional: trava destinatário
- */
+
 export default function KudosModal({ open, onClose, presetToUid }) {
-  const [me, setMe] = useState(null);            // {uid, name, email}
-  const [users, setUsers] = useState([]);        // [{uid, name, email}]
+  const [me, setMe] = useState(null);            
+  const [users, setUsers] = useState([]);       
   const [toUid, setToUid] = useState("");
   const [value, setValue] = useState(1);
   const [message, setMessage] = useState("");
@@ -107,7 +101,7 @@ export default function KudosModal({ open, onClose, presetToUid }) {
     }
 
     try {
-      // ✅ TROCA: agora chama sendKudosWithXp
+    
       await sendKudosWithXp({
         fromUid: me.uid,
         fromName: me.name || me.email,

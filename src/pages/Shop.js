@@ -15,16 +15,12 @@ import {
   markDelivered as markDeliveredService,
 } from "../services/shopService";
 
-/**
- * Coleções:
- *  - rewards: { name, price, stock, imageUrl, createdAt }
- *  - redemptions: { rewardId, rewardName, rewardPrice, userUid, userName, status: 'pendente'|'aprovado'|'negado'|'entregue', createdAt, decidedAt? }
- */
+
 
 export default function Shop() {
   const navigate = useNavigate();
 
-  // auth guard simples
+  
   useEffect(
     () => auth.onAuthStateChanged((u) => !u && navigate("/auth")),
     [navigate]
@@ -50,7 +46,7 @@ export default function Shop() {
     return () => unsub && unsub();
   }, []);
 
-  // ===== Resgates (apenas gestor vê tudo; colaborador vê seus) =====
+  //Resgates
   const [redemptions, setRedemptions] = useState([]);
   const [tab, setTab] = useState("catalog"); // catalog | approvals | my
   useEffect(() => {
@@ -63,7 +59,7 @@ export default function Shop() {
     return () => unsub && unsub();
   }, [me, isManager]);
 
-  // ===== Form gestor (criar item) =====
+  //criar item
   const [name, setName] = useState("");
   const [price, setPrice] = useState(50);
   const [stock, setStock] = useState(10);
@@ -94,7 +90,7 @@ export default function Shop() {
     await deleteRewardService(id);
   }
 
-  // ===== Colaborador: resgatar =====
+  //Colaborador: resgatar
   async function redeemReward(reward) {
     if (!me) return;
     if (Number(me.points || 0) < Number(reward.price || 0)) {
@@ -118,7 +114,7 @@ export default function Shop() {
     }
   }
 
-  // ===== Gestor: aprovar / negar / entregue =====
+  // Gestor: aprovar / negar / entregue
   async function approveRedemption(r) {
     try {
       await approveRedemptionService(r);
@@ -147,7 +143,7 @@ export default function Shop() {
     }
   }
 
-  // ===== Export CSV (gestor) =====
+  // Export CSV (gestor)
   function exportCSV() {
     const lines = [];
     lines.push("Status,Colaborador,Item,Preço,Data");
@@ -174,13 +170,13 @@ export default function Shop() {
     URL.revokeObjectURL(url);
   }
 
-  // ===== Derivados =====
+  
   const pendentes = isManager
     ? redemptions.filter((r) => r.status === "pendente")
     : [];
   const meus = !isManager ? redemptions : [];
 
-  // ===== Gamificação: recompensa alvo e progresso =====
+  //Gamificação: recompensa alvo e progresso
   const { affordableReward, nextReward } = useMemo(() => {
     if (!rewards || rewards.length === 0)
       return { affordableReward: null, nextReward: null };
@@ -582,7 +578,7 @@ export default function Shop() {
             </div>
           )}
 
-          {/* Lista completa para marcar entregue (opcional) */}
+          {}
           <div className="card" style={{ gridColumn: "1/-1" }}>
             <h3 style={{ marginTop: 0 }}>Todos os resgates</h3>
             <div className="grid" style={{ marginTop: 10 }}>
@@ -628,7 +624,7 @@ export default function Shop() {
   );
 }
 
-/* ====== subcomponentes & helpers ====== */
+/*helpers */
 
 function RedemptionCard({ r }) {
   return (

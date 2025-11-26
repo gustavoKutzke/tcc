@@ -3,12 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../lib/firebase";
 
-// 🔄 Agora usando o novo service
+
 import { saveDiscResultService } from "../services/discService";
 
-/* ---------------------------------------------
- * CONFIGURAÇÃO DISC
- * --------------------------------------------- */
+
 
 const GOLD = "#E5CFA3";
 const BROWN = "#4e3620";
@@ -57,10 +55,6 @@ const FACT_LABEL = {
   S: "Planejador",
   C: "Analista",
 };
-
-/* ---------------------------------------------
- * TEXTOS PROFISSIONAIS
- * --------------------------------------------- */
 
 const INSIGHTS = {
   D: {
@@ -140,10 +134,6 @@ const INSIGHTS = {
   },
 };
 
-/* ---------------------------------------------
- * BARRA DE PONTUAÇÃO
- * --------------------------------------------- */
-
 function ScoreBar({ label, value, max = 35 }) {
   const pct = Math.round((value / max) * 100);
 
@@ -176,9 +166,7 @@ function ScoreBar({ label, value, max = 35 }) {
   );
 }
 
-/* ---------------------------------------------
- * COMPONENTE PRINCIPAL
- * --------------------------------------------- */
+
 
 export default function DISC() {
   const navigate = useNavigate();
@@ -227,9 +215,7 @@ export default function DISC() {
   const dominant = ranking[0]?.k;
   const secondary = ranking[1]?.k;
 
-  /* ---------------------------------------------
-   * SUBMIT
-   * --------------------------------------------- */
+ 
   async function handleSubmit() {
     if (!allAnswered) return;
 
@@ -258,9 +244,7 @@ export default function DISC() {
     }
   }
 
-  /* ---------------------------------------------
-   * RESULTADO
-   * --------------------------------------------- */
+  
 
   if (result) {
     const d = INSIGHTS[dominant];
@@ -276,7 +260,7 @@ export default function DISC() {
           <b> +100 pontos</b> como ritual de passagem da trilha.
         </p>
 
-        {/* PERFIS */}
+        {}
         <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div className="card" style={{ border: "1px solid #eae0d3", padding: 16 }}>
             <h3 style={{ color: BROWN, marginTop: 0 }}>Perfis</h3>
@@ -294,7 +278,7 @@ export default function DISC() {
             </div>
           </div>
 
-          {/* INSIGHTS */}
+          {}
           <div className="card" style={{ border: "1px solid #eae0d3", padding: 16 }}>
             <h3 style={{ color: BROWN, marginTop: 0 }}>{d.headline}</h3>
             <SectionList title="Forças" items={d.strengths} />
@@ -303,7 +287,7 @@ export default function DISC() {
           </div>
         </div>
 
-        {/* SECUNDÁRIO */}
+        {}
         {s2 && (
           <div className="card" style={{ marginTop: 16, border: "1px solid #eae0d3", padding: 16 }}>
             <h3 style={{ color: BROWN, marginTop: 0 }}>{s2.headline} (secundário)</h3>
@@ -311,7 +295,7 @@ export default function DISC() {
           </div>
         )}
 
-        {/* BOTÕES */}
+        {}
         <div className="btn-row" style={{ gap: 8, marginTop: 12 }}>
           <button className="btn" onClick={() => navigate(-1)}>Voltar</button>
           <button className="btn" onClick={() => setResult(null)}>Refazer</button>
@@ -328,9 +312,7 @@ export default function DISC() {
     );
   }
 
-  /* ---------------------------------------------
-   * QUESTIONÁRIO
-   * --------------------------------------------- */
+ 
 
   return (
     <div className="card" style={{ maxWidth: 980, margin: "0 auto", background: "#fff" }}>
@@ -342,7 +324,7 @@ export default function DISC() {
         Ao concluir pela <b>primeira vez</b>, você recebe <b>+100 pontos</b> no Mapa de Carreira.
       </p>
 
-      {/* Progresso */}
+      {}
       <div style={{ margin: "6px 0 12px" }}>
         <div style={{
           display: "flex",
@@ -371,7 +353,7 @@ export default function DISC() {
         Responda de 1 (discordo totalmente) a 5 (concordo totalmente).
       </p>
 
-      {/* Perguntas */}
+      {}
       <div className="grid" style={{ gap: 12 }}>
         {ITEMS.map((it) => (
           <div
@@ -405,7 +387,7 @@ export default function DISC() {
         ))}
       </div>
 
-      {/* Botões */}
+      {}
       <div className="btn-row" style={{ marginTop: 12, gap: 8 }}>
         <button
           className="btn"
@@ -429,9 +411,7 @@ export default function DISC() {
   );
 }
 
-/* ---------------------------------------------
- * LISTA
- * --------------------------------------------- */
+
 
 function SectionList({ title, items }) {
   return (

@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../lib/firebase";
 import KudosModal from "../components/KudosModal";
 
-// utils de data (já estamos usando no Insights)
+
 import { monthKeyFromDate } from "../utils/dateUtils";
 
-// user centralizado
+
 import { listenCurrentUser } from "../services/userService";
 
-// serviços de kudos
+
 import {
   listenKudosByMonth,
   listenKudosForUserMonth,
@@ -21,17 +21,17 @@ export default function Kudos() {
   const navigate = useNavigate();
   const [me, setMe] = useState(null);
   const [kudos, setKudos] = useState([]);
-  const [tab, setTab] = useState("recebidos"); // recebidos | enviados | geral (gestor)
+  const [tab, setTab] = useState("recebidos"); 
   const [modalOpen, setModalOpen] = useState(false);
   const [month, setMonth] = useState(monthKeyFromDate());
 
-  // redireciona se não estiver logado (mesmo padrão das outras telas)
+  
   useEffect(
     () => auth.onAuthStateChanged((u) => !u && navigate("/auth")),
     [navigate]
   );
 
-  // carrega usuário logado + role via /users
+ 
   useEffect(() => {
     const unsub = listenCurrentUser(setMe);
     return () => {
@@ -41,7 +41,7 @@ export default function Kudos() {
 
   const isManager = me?.role === "gestor";
 
-  // carregar kudos conforme aba selecionada
+  
   useEffect(() => {
     if (!me) return;
 
@@ -153,7 +153,7 @@ export default function Kudos() {
           </div>
 
           <div className="btn-row">
-            {/* monthKey é texto (YYYY-MM), então um input simples funciona */}
+            {}
             <input
               className="input"
               style={{ maxWidth: 140 }}

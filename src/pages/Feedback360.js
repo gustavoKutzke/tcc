@@ -13,10 +13,10 @@ import SignaturePad from "signature_pad";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-// 🔹 usamos o mesmo helper de usuário que já está sendo usado no Career
+
 import { listenCurrentUser } from "../services/userService";
 
-// 🔹 novo service específico da tela
+
 import {
   listenFeedbacksForManager,
   listenFeedbacksForCollaborator,
@@ -25,7 +25,7 @@ import {
   loadFeedbackSignatures,
 } from "../services/feedback360Service";
 
-/* ================= Helpers visuais ================= */
+
 function Input({ label, ...props }) {
   return (
     <div>
@@ -60,7 +60,7 @@ function Card({ children, style }) {
   );
 }
 
-/* ================= Componente de Assinatura ================= */
+/*Componente de Assinatura*/
 function SignatureBox({ title, value, onChange, disabled }) {
   const canvasRef = useRef(null);
   const padRef = useRef(null);
@@ -75,7 +75,7 @@ function SignatureBox({ title, value, onChange, disabled }) {
     });
     padRef.current = pad;
 
-    // desenha imagem existente (quando houver)
+    
     if (value) {
       const img = new Image();
       img.onload = () => {
@@ -109,7 +109,7 @@ function SignatureBox({ title, value, onChange, disabled }) {
     };
   }, [value, onChange]);
 
-  // resize responsivo simples
+ 
   useEffect(() => {
     function fit() {
       const c = canvasRef.current;
@@ -120,7 +120,7 @@ function SignatureBox({ title, value, onChange, disabled }) {
       c.height = 140 * ratio;
       c.style.width = "100%";
       c.style.height = "140px";
-      // limpar após resize
+      
       if (padRef.current) padRef.current.clear();
       if (value) {
         const img = new Image();
@@ -182,11 +182,11 @@ function SignatureBox({ title, value, onChange, disabled }) {
   );
 }
 
-/* ================= PDF ================= */
+/*PDF */
 async function exportFeedbackPDF(feedbackDoc, signatures) {
-  // container temporário para print (replica o layout do papel)
+  
   const wrapper = document.createElement("div");
-  wrapper.style.width = "794px"; // ~A4 width @96dpi
+  wrapper.style.width = "794px"; 
   wrapper.style.padding = "24px";
   wrapper.style.fontFamily = "Arial, sans-serif";
   wrapper.style.color = "#2b211b";
@@ -270,7 +270,7 @@ async function exportFeedbackPDF(feedbackDoc, signatures) {
   const imgData = canvas.toDataURL("image/png");
   const pdf = new jsPDF("p", "pt", "a4");
   const pageWidth = pdf.internal.pageSize.getWidth();
-  const imgWidth = pageWidth - 48; // margins
+  const imgWidth = pageWidth - 48; 
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
   pdf.addImage(imgData, "PNG", 24, 24, imgWidth, imgHeight, "", "FAST");
@@ -293,13 +293,13 @@ function escapeHtml(s) {
     .replace(/>/g, "&gt;");
 }
 
-/* ================= PÁGINA ================= */
-export default function Feedback360() {
-  const [me, setMe] = useState(null); // user + role
-  const [users, setUsers] = useState([]); // colaboradores para seleção do gestor
-  const [items, setItems] = useState([]); // listagem
 
-  // form
+export default function Feedback360() {
+  const [me, setMe] = useState(null); 
+  const [users, setUsers] = useState([]); 
+  const [items, setItems] = useState([]); 
+
+ 
   const [collabUid, setCollabUid] = useState("");
   const [department, setDepartment] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -307,7 +307,7 @@ export default function Feedback360() {
   const [deliverables, setDeliverables] = useState("");
   const [behavior, setBehavior] = useState("");
 
-  // signatures on form (gestor e, depois, colaborador no viewer)
+  
   const [sigManager, setSigManager] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -317,7 +317,7 @@ export default function Feedback360() {
 
   const isManager = me?.role === "gestor";
 
-  /* === auth + role via userService === */
+  
   useEffect(() => {
     const unsub = listenCurrentUser(setMe);
     return () => {
@@ -325,7 +325,7 @@ export default function Feedback360() {
     };
   }, []);
 
-  /* === colaboradores (para gestor) === */
+  
   useEffect(() => {
     if (!isManager) return;
     const qUsers = query(
@@ -339,7 +339,7 @@ export default function Feedback360() {
     return () => unsub();
   }, [isManager]);
 
-  /* === listagem (gestor: todos; colaborador: só os dele) === */
+  
   useEffect(() => {
     if (!me) return;
     const unsub = isManager
@@ -380,7 +380,7 @@ export default function Feedback360() {
         managerSignature: sigManager,
       });
 
-      // limpa form
+      
       setCollabUid("");
       setDepartment("");
       setStartDate("");
@@ -422,7 +422,7 @@ export default function Feedback360() {
     <>
       <h2 className="section-title">Feedback 360º</h2>
 
-      {/* ====== Coluna esquerda: Form (gestor) ====== */}
+      {}
       {isManager && (
         <Card style={{ marginBottom: 16 }}>
           <h3 style={{ marginBottom: 8 }}>
@@ -521,7 +521,7 @@ export default function Feedback360() {
         </Card>
       )}
 
-      {/* ====== Lista / Histórico ====== */}
+      {/*Lista / Histórico */}
       <Card>
         <h3 style={{ marginBottom: 8 }}>
           {isManager ? "Feedbacks cadastrados" : "Meus feedbacks"}
@@ -543,7 +543,7 @@ export default function Feedback360() {
         )}
       </Card>
 
-      {/* ====== Modalzinho simples (viewer) ====== */}
+      {/*Modalzinho simples */}
       {selected && (
         <div
           style={{
@@ -590,7 +590,7 @@ export default function Feedback360() {
 
             <ViewerFeedback it={selected} />
 
-            {/* assinatura do colaborador (se for o dono) */}
+            {/* assinatura do colaborador*/}
             {me && selected.collaboratorUid === me.uid && (
               <div style={{ marginTop: 14 }}>
                 <SignatureBox
@@ -616,7 +616,7 @@ export default function Feedback360() {
   );
 }
 
-/* ====== Itens da lista ====== */
+
 function ItemFeedback({ it, isManager, onView, onExport }) {
   const start = toBr(it.startDate);
   const end = toBr(it.endDate);
@@ -651,7 +651,7 @@ function ItemFeedback({ it, isManager, onView, onExport }) {
   );
 }
 
-/* ====== Viewer (somente leitura) ====== */
+/*Viewer (somente leitura)*/
 function ViewerFeedback({ it }) {
   return (
     <div

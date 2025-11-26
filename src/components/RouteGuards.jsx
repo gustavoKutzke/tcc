@@ -2,9 +2,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 
-/**
- * Exige usuário autenticado. Se não tiver, manda para /auth
- */
+
 export function RequireAuth({ children }) {
   const { userAuth, loading } = useUser();
   const location = useLocation();
@@ -15,10 +13,7 @@ export function RequireAuth({ children }) {
   return children;
 }
 
-/**
- * Exige usuário autenticado com role === "gestor".
- * Caso contrário, redireciona para /dashboard (ou outra de sua preferência).
- */
+
 export function RequireManager({ children }) {
   const { userAuth, userDoc, loading } = useUser();
   const location = useLocation();

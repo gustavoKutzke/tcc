@@ -10,7 +10,6 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 
-// 👇 import correto do service
 import { upsertUserProfile } from "../services/userService";
 
 export default function Auth() {
@@ -45,7 +44,7 @@ export default function Auth() {
         await updateProfile(cred.user, { displayName: name });
       }
 
-      // 🔹 cria/atualiza doc do usuário via service (assinatura: uid, data)
+      
       await upsertUserProfile(cred.user.uid, {
         name,
         email,
@@ -82,11 +81,11 @@ export default function Auth() {
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
 
-      // 🔹 mesma assinatura: uid, data
+      
       await upsertUserProfile(user.uid, {
         name: user.displayName || "",
         email: user.email || "",
-        role: "colaborador", // padrão para login Google
+        role: "colaborador", 
         photoURL: user.photoURL || null,
       });
 
@@ -101,13 +100,13 @@ export default function Auth() {
   return (
     <div className="container-auth">
       <div className="card">
-        {/* Marca */}
+        {}
         <div className="brand-auth">
           <span className="badge" />
           <span>meu-tcc</span>
         </div>
 
-        {/* Abas */}
+        {}
         <div className="tabs">
           <button
             className={`tab ${tab === "login" ? "active" : ""}`}
@@ -123,7 +122,7 @@ export default function Auth() {
           </button>
         </div>
 
-        {/* Formulários */}
+        {}
         {tab === "login" ? (
           <form
             className="form"

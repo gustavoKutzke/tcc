@@ -14,7 +14,7 @@ import {
   calculateProgressFromItems,
 } from "../services/pdiService";
 
-/* ==== UI helpers ==== */
+
 
 const SectionTitle = ({ children }) => (
   <h2 className="section-title" style={{ marginBottom: 10 }}>
@@ -40,7 +40,7 @@ const STATUSES = [
   { k: "cancelada", label: "Cancelada" },
 ];
 
-/* Textarea maior com auto-altura */
+
 function AutoGrowTextArea({
   value,
   onChange,
@@ -91,7 +91,7 @@ export default function PDI() {
   const [planId, setPlanId] = useState(null);
   const [items, setItems] = useState([]);
 
-  // Cabeçalho enxuto
+ 
   const [profile, setProfile] = useState("");
   const [roleTitle, setRoleTitle] = useState("");
   const [managerName, setManagerName] = useState("");
@@ -99,10 +99,10 @@ export default function PDI() {
   const [endDate, setEndDate] = useState("");
   const [followUp, setFollowUp] = useState("Mensal");
 
-  // trava de save
+  
   const savingRef = useRef(false);
 
-  /* === Auth / papel === */
+  
   useEffect(() => {
     const unsub = listenCurrentUser((user) => {
       setMe(user);
@@ -118,7 +118,7 @@ export default function PDI() {
     return () => unsub && unsub();
   }, []);
 
-  /* === Dropdown colaboradores (gestor) === */
+
   useEffect(() => {
     if (!isManager) return;
     const unsub = listenCollaborators(setUsers);
@@ -134,7 +134,7 @@ export default function PDI() {
     setFollowUp("Mensal");
   }
 
-  /* === Carregar plano (listener) === */
+  
   useEffect(() => {
     if (!subjectUid) {
       setPlanId(null);
@@ -162,7 +162,7 @@ export default function PDI() {
     return () => unsub && unsub();
   }, [subjectUid]);
 
-  /* === Carregar itens (listener depende do planId) === */
+  
   useEffect(() => {
     setItems([]);
     if (!planId) return;
@@ -282,7 +282,7 @@ export default function PDI() {
     }
   };
 
-  // sem XP no front – só salva item e recalcula progresso
+  
   const updateCell = async (row, patch) => {
     if (!planId) return;
 

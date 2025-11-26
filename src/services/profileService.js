@@ -10,9 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 
-/**
- * Busca os dados de um usuário na coleção "users".
- */
+
 export async function fetchUserByUid(uid) {
   if (!uid) throw new Error("uid obrigatório em fetchUserByUid");
 
@@ -28,10 +26,7 @@ export async function fetchUserByUid(uid) {
   }
 }
 
-/**
- * Lista de colaboradores (para o gestor selecionar).
- * Retorna a função de unsubscribe.
- */
+
 export function listenCollaborators(onUsersChange) {
   const qUsers = query(
     collection(db, "users"),
@@ -47,16 +42,7 @@ export function listenCollaborators(onUsersChange) {
   return unsub;
 }
 
-/**
- * Escuta tudo que o Profile precisa para um colaborador:
- * - doc do usuário
- * - metas
- * - feedbacks
- * - kudos (todos)
- * - kudos do mês
- *
- * Retorna função única de unsubscribe que limpa tudo.
- */
+
 export function listenProfileData(subjectUid, monthKey, callbacks) {
   const {
     onUser,

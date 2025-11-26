@@ -17,7 +17,6 @@ import { computeEffectivePoints } from "../lib/gamification";
 
 /**
  * TABELA CENTRAL DE XP
- * (ajuste os valores como quiser para o TCC)
  */
 export const XP_VALUES = {
   // Metas
@@ -49,12 +48,10 @@ export const XP_VALUES = {
   CUSTOM_DEFAULT: 5,
 };
 
-/**
- * Enum de fontes de XP para log.
- */
+
 export const XP_SOURCES = {
   GOAL_COMPLETED: "goal_completed",
-  GOAL_COMPLETE: "goal_completed", // alias
+  GOAL_COMPLETE: "goal_completed", 
   GOAL_REOPEN: "goal_reopen",
 
   KUDOS_RECEIVED: "kudos_received",
@@ -72,7 +69,7 @@ export const XP_SOURCES = {
   CUSTOM: "custom",
 };
 
-/** Incrementa pontos no /users/{uid} */
+
 async function incrementUserPoints(uid, delta) {
   if (!uid || !delta) return;
   const ref = doc(db, "users", uid);
@@ -106,10 +103,7 @@ async function logXp({
   });
 }
 
-/**
- * ✅ Dispara UM único toast global.
- * (antes eram 3 eventos → duplicava toast)
- */
+
 function emitXpToast({ uid, source, points, basePoints, appliedMultiplier, meta }) {
   try {
     if (typeof window === "undefined") return;
@@ -125,25 +119,14 @@ function emitXpToast({ uid, source, points, basePoints, appliedMultiplier, meta 
       createdAt: Date.now(),
     };
 
-    // evento único padrão
+   
     window.dispatchEvent(new CustomEvent("xp-earned", { detail }));
   } catch {
-    // não quebra o fluxo de XP
+   
   }
 }
 
-/**
- * ============================================================
- *  awardXpToUser (FUNÇÃO CENTRAL)
- * ============================================================
- *
- * params:
- *  - uid: string
- *  - basePoints OU amount: number  (basePoints tem prioridade)
- *  - source: XP_SOURCES.*
- *  - meta / metadata: objeto livre (goalId, kudosId, etc.)
- *  - isSeasonGoal / isStreakDay: para multiplicadores
- */
+
 export async function awardXpToUser({
   uid,
   basePoints,
@@ -170,7 +153,7 @@ export async function awardXpToUser({
     { isSeasonGoal, isStreakDay }
   );
 
-  // Se por algum motivo vier 0, garante pelo menos o base
+  
   const safeFinal = finalPoints || numericBase;
 
   await incrementUserPoints(uid, safeFinal);
@@ -192,7 +175,7 @@ export async function awardXpToUser({
     finalPoints: safeFinal,
   });
 
-  // 🔥 TOAST DE XP (evento único)
+  // TOAST DE XP 
   emitXpToast({
     uid,
     source,
@@ -205,15 +188,10 @@ export async function awardXpToUser({
   return { finalPoints: safeFinal, appliedMultiplier };
 }
 
-/* ============================================================
- *  HISTÓRICO DE XP (para aba "Evolução" no Career)
- * ============================================================
+/* 
+  HISTÓRICO DE XP ( aba Evolução)
  */
 
-/**
- * Histórico de XP para um usuário (últimos N eventos).
- * Usado na aba "Evolução" do Mapa de Carreira.
- */
 export function listenXpHistory(uid, callback, { limit = 50 } = {}) {
   if (!uid) return () => {};
 
@@ -235,8 +213,6 @@ export function listenXpHistory(uid, callback, { limit = 50 } = {}) {
   return unsub;
 }
 
-/* ============= WRAPPERS ESPECÍFICOS ================== */
-
 // Meta concluída
 export async function grantGoalCompletionXp({
   uid,
@@ -257,7 +233,7 @@ export async function grantGoalCompletionXp({
   });
 }
 
-// Penalidade ao reabrir meta (XP negativo)
+// Penalidade ao reabrir meta
 export async function grantGoalReopenPenalty({
   uid,
   basePoints,
@@ -273,7 +249,7 @@ export async function grantGoalReopenPenalty({
   });
 }
 
-// Kudos recebidos – value = “valor” do kudos
+// Kudos recebidos
 export async function grantKudosReceivedXp({ uid, value, meta }) {
   const bp = Number(value || 0) * XP_VALUES.KUDOS_RECEIVED_PER_POINT;
   if (!bp) return { finalPoints: 0, appliedMultiplier: 1 };

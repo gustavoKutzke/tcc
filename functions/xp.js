@@ -3,11 +3,7 @@ const admin = require("firebase-admin");
 
 const db = admin.firestore();
 
-/**
- * grantXp
- * GET  /grantXp?uid=XXX&points=10&source=test
- * POST /grantXp  body { uid, points, source }
- */
+
 exports.grantXp = functions.https.onRequest(async (req, res) => {
   try {
     // Aceita GET (query) ou POST (body)

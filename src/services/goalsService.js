@@ -16,10 +16,7 @@ import {
 
 const GOALS_COLLECTION = "goals";
 
-/**
- * Escuta em tempo real as metas (/goals) de um usuário específico.
- * Usado, por exemplo, na tela de Mapa de Carreira.
- */
+
 export function listenUserGoals(uid, setGoals) {
   if (!uid) {
     return () => {};
@@ -39,10 +36,7 @@ export function listenUserGoals(uid, setGoals) {
   return unsub;
 }
 
-/**
- * Escuta TODAS as metas concluídas (status == "concluida").
- * Usado no FEED para montar o mural de conquistas.
- */
+
 export function listenCompletedGoals(setGoals) {
   const qG = query(
     collection(db, GOALS_COLLECTION),
@@ -58,10 +52,7 @@ export function listenCompletedGoals(setGoals) {
   return unsub;
 }
 
-/**
- * Escuta metas para o GESTOR, com filtros opcionais.
- * filters: { ownerUid: "all" | uid, status: "all" | "aberta" | "concluida" }
- */
+
 export function listenGoalsForManager(filters, setGoals) {
   const { ownerUid = "all", status = "all" } = filters || {};
 
@@ -85,9 +76,7 @@ export function listenGoalsForManager(filters, setGoals) {
   return unsub;
 }
 
-/**
- * Escuta metas para um COLABORADOR específico (tela Metas -> visão do colaborador).
- */
+
 export function listenGoalsForCollaborator(ownerUid, setGoals) {
   if (!ownerUid) return () => {};
 
@@ -106,10 +95,7 @@ export function listenGoalsForCollaborator(ownerUid, setGoals) {
   return unsub;
 }
 
-/**
- * Cria uma nova meta para um colaborador.
- * dueDateISO: string "yyyy-mm-dd"
- */
+
 export async function createGoal({
   title,
   description,
@@ -118,8 +104,8 @@ export async function createGoal({
   ownerUid,
   ownerName,
   createdByUid,
-  isPdi = false, // opcional: marcar meta ligada ao PDI
-  seasonKey = null, // opcional: meta vinculada a uma temporada
+  isPdi = false, 
+  seasonKey = null, 
 }) {
   const dueDate = dueDateISO
     ? Timestamp.fromDate(new Date(dueDateISO + "T23:59:59"))
@@ -128,7 +114,7 @@ export async function createGoal({
   const payload = {
     title: title?.trim() || "",
     description: description?.trim() || "",
-    points: Number(points || 0), // continua existindo como "peso" da meta
+    points: Number(points || 0), 
     dueDate,
     ownerUid,
     ownerName: ownerName || "",
@@ -136,7 +122,7 @@ export async function createGoal({
     createdAt: serverTimestamp(),
     status: "aberta",
     completedAt: null,
-    // flags de gamificação
+    
     isPdi: !!isPdi,
     seasonKey: seasonKey || null,
   };
@@ -144,15 +130,7 @@ export async function createGoal({
   return addDoc(collection(db, GOALS_COLLECTION), payload);
 }
 
-/**
- * Alterna o status da meta (aberta <-> concluída).
- *
- * ❗ Toda a lógica de XP agora está nas Cloud Functions (backend),
- * então aqui só atualizamos o documento no Firestore.
- *
- * Mantemos a assinatura com o segundo parâmetro por compatibilidade,
- * mas ele não é mais utilizado.
- */
+
 export async function toggleGoalStatus(
   goal,
   _options = {}

@@ -13,12 +13,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-/* === Kudos === */
+/*Kudos*/
 import KudosModal from "../components/KudosModal";
 import KudosBudgetCard from "../components/KudosBudgetCard";
 import { monthKeyFromDate } from "../lib/date";
 
-// 🔹 Services
+//Services
 import { listenCurrentUser, listenUsersByPoints } from "../services/userService";
 import { listenUserGoals } from "../services/goalsService";
 import { listenKudosForUserMonth } from "../services/kudosService";
@@ -33,7 +33,7 @@ export default function Dashboard() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [usersSorted, setUsersSorted] = useState([]);
 
-  // Kudos do mês (lista completa)
+  // Kudos do mês
   const [kudosOpen, setKudosOpen] = useState(false);
   const [kudosMe, setKudosMe] = useState([]);
   const monthKey = monthKeyFromDate();
@@ -42,9 +42,9 @@ export default function Dashboard() {
     [kudosMe]
   );
 
-  /* ===================== LISTENERS via SERVICES ===================== */
+  /*LISTENERS */
 
-  // Usuário logado + documento em tempo real
+  // Usuário logado
   useEffect(() => {
     const unsub = listenCurrentUser(setUserData);
     return () => {
@@ -61,7 +61,7 @@ export default function Dashboard() {
     };
   }, [userData?.uid]);
 
-  // Kudos recebidos no mês (lista completa)
+  // Kudos recebidos no mês 
   useEffect(() => {
     if (!userData?.uid) return;
     const unsub = listenKudosForUserMonth(userData.uid, monthKey, setKudosMe);
@@ -70,7 +70,7 @@ export default function Dashboard() {
     };
   }, [userData?.uid, monthKey]);
 
-  // Ranking (todos usuários ordenados por pontos)
+  // Ranking
   useEffect(() => {
     const unsub = listenUsersByPoints((users) => {
       setUsersSorted(users);
@@ -89,7 +89,7 @@ export default function Dashboard() {
     };
   }, [userData?.uid]);
 
-  /* ===================== DERIVADOS ===================== */
+  
 
   useEffect(() => {
     if (userData) {
@@ -113,7 +113,7 @@ export default function Dashboard() {
   const isManager = userData.role === "gestor";
   const top3 = usersSorted.slice(0, 3);
 
-  // resumo de metas de carreira do usuário
+  // resumo de metas de carreira
   const careerGoals = goals.filter((g) => g.source === "career");
   const careerOpen = careerGoals.filter((g) => g.status !== "concluida").length;
   const careerDone = careerGoals.filter((g) => g.status === "concluida").length;
@@ -186,7 +186,7 @@ export default function Dashboard() {
         <div style={levelBadgeStyle(level.key)}>{level.label}</div>
       </div>
 
-      {/* Kudos do mês */}
+      {}
       <div className="card" style={{ marginBottom: 16 }}>
         <div
           style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
@@ -222,7 +222,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Resumo Metas de Carreira */}
+      {}
       <div className="card" style={{ marginBottom: 16 }}>
         <div
           style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
@@ -369,13 +369,13 @@ export default function Dashboard() {
 
       <KudosModal open={kudosOpen} onClose={() => setKudosOpen(false)} />
 
-      {/* pequeno CSS do chip carreira (caso Goals.js ainda não tenha sido montado na tela) */}
+      {}
       <CareerChipStylesOnce />
     </>
   );
 }
 
-/* ==== utils e componentes auxiliares ==== */
+/* utils*/
 
 function Avatar({ name, photoURL, size = 40 }) {
   const initials = getInitials(name);

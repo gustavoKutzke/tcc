@@ -9,10 +9,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-/**
- * Escuta últimos eventos de XP do usuário.
- * maxEvents: quantos logs trazer (default 30).
- */
+
 export function listenXpLogForUser(uid, setEvents, maxEvents = 30) {
   if (!uid) return () => {};
 

@@ -14,16 +14,16 @@ import {
   Line,
 } from "recharts";
 
-// pega usuário logado + role
+
 import { listenCurrentUser } from "../services/userService";
 
-// services de insights
+
 import {
   loadTeams,
   loadInsightsForManager,
 } from "../services/insightsService";
 
-// utils de datas
+
 import {
   monthKeyFromDate,
   lastNMonths,
@@ -31,11 +31,11 @@ import {
   formatBr,
 } from "../utils/dateUtils";
 
-/* ===== Página ===== */
+/*Página*/
 export default function Insights() {
   const navigate = useNavigate();
 
-  // redireciona se não estiver logado (padrão das outras telas)
+  // redireciona
   useEffect(
     () => auth.onAuthStateChanged((u) => !u && navigate("/auth")),
     [navigate]
@@ -61,7 +61,7 @@ export default function Insights() {
   const [dailyKudos, setDailyKudos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /* Auth + papel (via service) */
+  
   useEffect(() => {
     const unsub = listenCurrentUser(setMe);
     return () => {
@@ -70,7 +70,7 @@ export default function Insights() {
   }, []);
   const isManager = me?.role === "gestor";
 
-  /* Times para filtro (via service) */
+  /* Times para filtro */
   useEffect(() => {
     let active = true;
     (async () => {
@@ -87,7 +87,7 @@ export default function Insights() {
     };
   }, []);
 
-  /* Carga principal (aplica mês + time via service) */
+  
   useEffect(() => {
     let active = true;
     (async () => {
@@ -309,7 +309,7 @@ export default function Insights() {
         </div>
       </div>
 
-      {/* Tabelas resumidas */}
+      {}
       <div
         className="grid"
         style={{ gridTemplateColumns: "1fr 1fr 1fr", marginTop: 12 }}
@@ -354,7 +354,7 @@ export default function Insights() {
   );
 }
 
-/* ===== Componentes básicos ===== */
+
 function KpiCard({ label, value, hint }) {
   return (
     <div className="card" style={{ textAlign: "center" }}>
@@ -421,7 +421,7 @@ function Table({ headers = [], rows = [] }) {
   );
 }
 
-/* ===== Export CSV ===== */
+/*exportar CSV*/
 function exportCSV({
   kpi,
   topScorers,
@@ -495,7 +495,7 @@ function exportCSV({
   URL.revokeObjectURL(url);
 }
 
-/* ===== estilos básicos de tabela ===== */
+
 const table = {
   width: "100%",
   borderCollapse: "separate",

@@ -10,7 +10,7 @@ import {
   fetchTimelineEvents,
 } from "../services/timelineService";
 
-/** ===== Helpers de datas ===== */
+
 function monthKeyFromDate(d = new Date()) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -18,7 +18,7 @@ function monthKeyFromDate(d = new Date()) {
 }
 function startEndOfMonth(d = new Date()) {
   const start = new Date(d.getFullYear(), d.getMonth(), 1);
-  const end = new Date(d.getFullYear(), d.getMonth() + 1, 1); // exclusivo
+  const end = new Date(d.getFullYear(), d.getMonth() + 1, 1); 
   return { start, end };
 }
 function toBrDate(x) {
@@ -38,13 +38,7 @@ function isoDay(d) {
   return `${y}-${m}-${day}`;
 }
 
-/** ===== Tipos de evento do feed =====
- *  - goal_done
- *  - kudos_in
- *  - kudos_out
- *  - feedback_in
- *  - badge
- */
+
 const TYPE_LABEL = {
   goal_done: "Meta concluída",
   kudos_in: "Kudos recebido",
@@ -87,9 +81,9 @@ export default function Timeline() {
   // feed
   const [events, setEvents] = useState([]);
   const [kudosOpen, setKudosOpen] = useState(false);
-  const [presetTo, setPresetTo] = useState(null); // {uid, name} para "agradecer de volta"
+  const [presetTo, setPresetTo] = useState(null); 
 
-  // ===== 1) Quem sou eu
+  
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(async (u) => {
       if (!u) {
@@ -107,14 +101,14 @@ export default function Timeline() {
     return () => unsub();
   }, []);
 
-  // ===== 2) Carregar lista de colaboradores (apenas gestor)
+  //Carregar lista de colaboradores (apenas gestor)
   useEffect(() => {
     if (!isManager) return;
     const unsub = subscribeCollaborators(setUsers);
     return () => unsub && unsub();
   }, [isManager]);
 
-  // ===== 3) Montar feed do mês
+  // Montar feed do mês
   const { start, end } = useMemo(() => {
     const [y, m] = monthKey.split("-").map((n) => parseInt(n, 10));
     const ref = new Date(y, (m || 1) - 1, 1);
@@ -148,7 +142,7 @@ export default function Timeline() {
     };
   }, [subjectUid, monthKey, start, end]);
 
-  // ====== Resumo Gamificado do Mês (pontos, kudos, streak) ======
+  // Resumo Gamificado do Mês
   const summary = useMemo(() => {
     if (!events || events.length === 0) {
       return {
@@ -205,7 +199,7 @@ export default function Timeline() {
       }
     });
 
-    // streak simples no mês (dias consecutivos com qualquer evento)
+    // streak simples no mês
     const daysArr = Array.from(daySet.values()).sort();
     let bestStreak = 0;
     let currentStreak = 0;
@@ -242,7 +236,7 @@ export default function Timeline() {
     };
   }, [events]);
 
-  // ====== Render ======
+  // Render
   if (!me) {
     return (
       <div className="card">
@@ -415,7 +409,7 @@ export default function Timeline() {
               key={idx}
               ev={ev}
               onThank={(to) => {
-                setPresetTo(to); // { uid, name }
+                setPresetTo(to); 
                 setKudosOpen(true);
               }}
             />
@@ -435,7 +429,7 @@ export default function Timeline() {
         )}
       </div>
 
-      {/* Modal de Kudos (agradecer de volta) */}
+      {/*Kudos (agradecer de volta) */}
       <KudosModal
         open={kudosOpen}
         onClose={() => {
@@ -448,7 +442,7 @@ export default function Timeline() {
   );
 }
 
-/** ====== Componentes ====== */
+/**Componentes*/
 
 function ResumoItem({ label, value, icon }) {
   return (
@@ -674,7 +668,7 @@ function MonthPicker({ monthKey, setMonthKey }) {
   );
 }
 
-/** ===== estilos pequenos ===== */
+
 const activeBtn = {
   borderColor: "#e9e1d8",
   boxShadow: "0 0 0 4px rgba(200,168,72,.25)",

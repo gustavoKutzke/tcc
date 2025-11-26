@@ -11,9 +11,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-/**
- * Busca o usuário logado na coleção "users".
- */
+
 export async function fetchCurrentUser(uid) {
   if (!uid) return null;
 
@@ -29,11 +27,7 @@ export async function fetchCurrentUser(uid) {
   }
 }
 
-/**
- * Busca metas no intervalo [start, end) filtrando por completedAt.
- * Se ownerUid for informado, restringe ao colaborador.
- * Retorna um array de docs (id + data()).
- */
+
 export async function fetchGoalsInRange({ start, end, ownerUid }) {
   if (!start || !end) return [];
 
@@ -66,10 +60,7 @@ export async function fetchGoalsInRange({ start, end, ownerUid }) {
   return rows;
 }
 
-/**
- * Busca kudos de um determinado mês (monthKey = 'YYYY-MM').
- * Se toUid for informado, restringe ao destinatário.
- */
+
 export async function fetchKudosForMonth({ monthKey, toUid }) {
   if (!monthKey) return [];
 

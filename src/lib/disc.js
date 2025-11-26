@@ -13,17 +13,6 @@ import {
   grantDiscFirstResultXp,
 } from "../services/xpService";
 
-/**
- * ============================================================
- *  SALVA O RESULTADO DO DISC (centralizado com XP)
- * ------------------------------------------------------------
- *  - Registra histórico em /discResults
- *  - Atualiza /users/{uid} com discProfile, scores, etc.
- *  - Se for a PRIMEIRA vez → chama grantDiscFirstResultXp
- *    (+100 pts no Mapa de Carreira, registrado no /xpLog)
- * ============================================================
- */
-
 export async function saveDiscResult({ uid, scores, dominant, secondary }) {
   const current = auth.currentUser;
   const userId = uid || current?.uid;
@@ -45,9 +34,9 @@ export async function saveDiscResult({ uid, scores, dominant, secondary }) {
   const prevData = snap.exists() ? snap.data() : {};
   const alreadyHadDisc = !!prevData.discCompletedAt;
 
-  // 2) Transação para salvar histórico + atualizar perfil DISC
+  //salvar histórico + atualizar perfil DISC
   await runTransaction(db, async (tx) => {
-    // histórico de DISC (sempre grava uma linha nova)
+    
     const newHistoryRef = doc(historyCol);
     tx.set(newHistoryRef, {
       ownerUid: userId,
@@ -55,7 +44,7 @@ export async function saveDiscResult({ uid, scores, dominant, secondary }) {
       scores,
       dominant,
       secondary,
-      // só para informação (o XP mesmo fica centralizado no xpLog)
+      
       pointsBonus: alreadyHadDisc ? 0 : XP_VALUES.DISC_FIRST_RESULT,
       createdAt: serverTimestamp(),
     });
@@ -72,14 +61,14 @@ export async function saveDiscResult({ uid, scores, dominant, secondary }) {
       discCompletedAt: serverTimestamp(),
     };
 
-    // cria ou atualiza user (sem mexer em points aqui)
+   
     tx.set(
       userRef,
       {
         uid: userId,
         name: safeName,
         email: current?.email || "",
-        // não alteramos "points" aqui
+       
         ...discUpdate,
       },
       { merge: true }

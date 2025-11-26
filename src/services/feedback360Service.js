@@ -1,5 +1,5 @@
 // src/services/feedback360Service.js
-// Centraliza toda a lógica de Firestore da tela Feedback360
+
 
 import { db } from "../lib/firebase";
 import {
@@ -17,10 +17,7 @@ import {
 
 const FEEDBACKS_COLLECTION = "feedbacks";
 
-/**
- * Escuta em tempo real TODOS os feedbacks (modo gestor).
- * Retorna função de unsubscribe (para usar no useEffect).
- */
+
 export function listenFeedbacksForManager(setItems) {
   const base = collection(db, FEEDBACKS_COLLECTION);
   const qFb = query(base, orderBy("createdAt", "desc"));
@@ -33,9 +30,7 @@ export function listenFeedbacksForManager(setItems) {
   return unsub;
 }
 
-/**
- * Escuta em tempo real os feedbacks de um colaborador específico.
- */
+
 export function listenFeedbacksForCollaborator(uid, setItems) {
   if (!uid) return () => {};
 
@@ -54,13 +49,7 @@ export function listenFeedbacksForCollaborator(uid, setItems) {
   return unsub;
 }
 
-/**
- * Cria um novo feedback (contrato de expectativa) e, se houver,
- * já salva a assinatura do gestor na subcoleção /signatures.
- *
- * ✅ O XP agora é aplicado SOMENTE no backend (Cloud Functions).
- * Aqui apenas criamos o documento com xpApplied: false.
- */
+
 export async function createFeedbackWithManagerSignature({
   collaboratorUid,
   collaboratorName,
@@ -71,7 +60,7 @@ export async function createFeedbackWithManagerSignature({
   endDate,
   deliverables,
   behavior,
-  managerSignature, // base64 da assinatura ou ""
+  managerSignature,
 }) {
   const payload = {
     collaboratorUid,
@@ -89,10 +78,10 @@ export async function createFeedbackWithManagerSignature({
     xpApplied: false,
   };
 
-  // 1) cria documento principal
+  
   const ref = await addDoc(collection(db, FEEDBACKS_COLLECTION), payload);
 
-  // 2) salva assinatura do gestor (opcional)
+  //salvar assinatura do gestor 
   if (managerSignature) {
     await setDoc(
       doc(db, FEEDBACKS_COLLECTION, ref.id, "signatures", "manager"),
@@ -105,13 +94,11 @@ export async function createFeedbackWithManagerSignature({
     );
   }
 
-  // 3) XP é tratado apenas pelas Cloud Functions (feedback.js)
+ 
   return ref;
 }
 
-/**
- * Salva/atualiza a assinatura do colaborador para um feedback.
- */
+
 export async function saveCollaboratorSignature(
   feedbackId,
   { byUid, name, imageData }
@@ -129,10 +116,6 @@ export async function saveCollaboratorSignature(
   );
 }
 
-/**
- * Carrega as assinaturas (gestor e colaborador) de um feedback.
- * Retorna { manager: string, collaborator: string }
- */
 export async function loadFeedbackSignatures(feedbackId) {
   if (!feedbackId) {
     return { manager: "", collaborator: "" };

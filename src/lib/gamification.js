@@ -1,46 +1,25 @@
 // src/lib/gamification.js
 
-/**
- * =========================================================
- *  SISTEMA DE GAMIFICAÇÃO – VERSÃO TCC (COMPLETA)
- * =========================================================
- *
- *  - Economia de pontos (XP_SOURCES)
- *  - Trilhas de nível (careerLevels)
- *  - Desafios sazonais (seasonalChallenges)
- *  - Marcos / badges dinâmicos (milestones)
- *  - Streaks (computeGoalStreak)
- *  - PDI como questline (computePdiStats)
- *  - Nível de mentor (computeMentorLevel)
- *  - Missões do dia com DISC (suggestDailyMissions)
- *  - Pontos efetivos com multiplicadores (computeEffectivePoints)
- *  - Estilo visual (levelBadgeStyle)
- *  - Texto de estilo DISC (describeDiscStyle)
- * =========================================================
- */
 
-/** =========================================================
- *  1. Economia de Pontos – Tabela oficial de XP do TCC
- * ========================================================= */
+/** 
+Tabela DE XP
+ *  */
 export const XP_SOURCES = {
-  goalNormal: 10, // meta comum concluída
-  goalPdi: 15, // meta ligada ao PDI (via metas)
-  kudosReceived: 2, // cada kudos recebido
-  kudosSent: 1, // cada kudos enviado
-  feedbackReceived: 3, // receber feedback formal
-  feedbackSent: 4, // enviar feedback estruturado
-  dailyMissionsAllDone: 10, // já usado no Career (+10)
+  goalNormal: 10, 
+  goalPdi: 15, 
+  kudosReceived: 2, 
+  kudosSent: 1, 
+  feedbackReceived: 3, 
+  feedbackSent: 4, 
+  dailyMissionsAllDone: 10, 
   weeklyMissionsAllDone: 20,
 
-  // 🔹 PDI como campanha de desenvolvimento
-  pdiItem: 10, // cada ação (item) do PDI concluída
-  pdiCompleted: 50, // concluir um PDI inteiro
+  
+  pdiItem: 10, 
+  pdiCompleted: 50, 
 };
 
-/**
- * Helpers genéricos de XP – para usar nos services
- * (goalsService, kudosService, feedbackService, pdiService, etc.)
- */
+
 export function xpFromGoal({
   isPdi = false,
   basePoints = null,
@@ -105,7 +84,7 @@ export function xpFromPdiCompleted({ plansCompleted = 1 } = {}) {
 }
 
 /**
- * XP direto por ações do PDI (cada item concluído)
+  XP -> PDI 
  */
 export function xpFromPdiItem({ itemsCompleted = 1 } = {}) {
   return {
@@ -114,9 +93,9 @@ export function xpFromPdiItem({ itemsCompleted = 1 } = {}) {
   };
 }
 
-/** =========================================================
- *  2. Trilhas e níveis
- * ========================================================= */
+/**
+Trilhas e níveis
+ */
 export const careerLevels = [
   {
     key: "iniciante",
@@ -159,9 +138,9 @@ export const careerLevels = [
   },
 ];
 
-/** =========================================================
- *  3. Desafios sazonais (Seasonal Challenges)
- * ========================================================= */
+/** 
+ Desafios sazonais
+  */
 export const seasonalChallenges = [
   {
     key: "season_collab_q1",
@@ -183,11 +162,11 @@ export const seasonalChallenges = [
   },
 ];
 
-/** =========================================================
- *  4. Badges / marcos dinâmicos
- * ========================================================= */
+/** 
+ Badges
+  */
 export const milestones = [
-  // ---- Metas concluídas ----
+  //Metas concluídas
   {
     key: "first_goal",
     label: "Primeira Meta Concluída",
@@ -209,7 +188,7 @@ export const milestones = [
     check: ({ goalsDone }) => goalsDone >= 50,
   },
 
-  // ---- Pontos acumulados ----
+  //Pontos acumulados
   {
     key: "points_100",
     label: "100 Pontos Acumulados",
@@ -231,7 +210,7 @@ export const milestones = [
     check: ({ points }) => points >= 1000,
   },
 
-  // ---- Kudos recebidos (capital social) ----
+  //Kudos recebidos
   {
     key: "kudos_recv_10",
     label: "10 Kudos Recebidos",
@@ -243,7 +222,7 @@ export const milestones = [
     check: ({ kudosRecv }) => kudosRecv >= 30,
   },
 
-  // ---- Kudos enviados (influência) ----
+  //Kudos Enviados
   {
     key: "kudos_sent_10",
     label: "Mentor em Formação (10 kudos enviados)",
@@ -255,7 +234,7 @@ export const milestones = [
     check: ({ kudosSent }) => kudosSent >= 30,
   },
 
-  // ---- Feedbacks (linha de mentor) ----
+  //Feedbacks
   {
     key: "feedback_sent_5",
     label: "Mentor Bronze (5 feedbacks enviados)",
@@ -272,7 +251,7 @@ export const milestones = [
     check: ({ feedbackRecv }) => feedbackRecv >= 5,
   },
 
-  // ---- PDI (Plano de Desenvolvimento Individual) ----
+  //PDI 
   {
     key: "pdi_completed_1",
     label: "Primeiro PDI Concluído",
@@ -284,7 +263,7 @@ export const milestones = [
     check: ({ pdiItemsCompleted }) => pdiItemsCompleted >= 10,
   },
 
-  // ---- Streaks – consistência (dias seguidos) ----
+  //Streaks
   {
     key: "streak_5",
     label: "5 Dias Seguidos de Progresso",
@@ -296,7 +275,7 @@ export const milestones = [
     check: ({ goalStreakDays }) => goalStreakDays >= 10,
   },
 
-  // ---- Temporada (desafio sazonal) ----
+  //Temporada 
   {
     key: "season_hero",
     label: "Herói da Temporada",
@@ -304,9 +283,9 @@ export const milestones = [
   },
 ];
 
-/** =========================================================
- *  5. Nível atual (por pontos)
- * ========================================================= */
+/** 
+  Nível atual 
+  */
 export function computeLevel(points = 0) {
   const p = Number(points || 0);
   let current = careerLevels[0];
@@ -316,9 +295,9 @@ export function computeLevel(points = 0) {
   return current; // {key,label,min,perks}
 }
 
-/** =========================================================
- *  6. Próximo nível e progresso percentual
- * ========================================================= */
+/** 
+ Próximo nível e progresso percentual
+  */
 export function nextLevelProgress(points = 0) {
   const p = Number(points || 0);
   let current = careerLevels[0];
@@ -340,12 +319,6 @@ export function nextLevelProgress(points = 0) {
   return { current, next, progress, remain };
 }
 
-/** =========================================================
- *  7. Estatísticas de PDI (questline épica)
- * =========================================================
- * Espera um array de planos de PDI, onde cada plano pode ter
- * um array de items [{ status: "concluida" | ... }, ...]
- * ========================================================= */
 export function computePdiStats(plans = []) {
   let pdiCompleted = 0;
   let pdiItemsCompleted = 0;
@@ -366,24 +339,21 @@ export function computePdiStats(plans = []) {
   return { pdiCompleted, pdiItemsCompleted };
 }
 
-/** =========================================================
- *  8. Cálculo de badges dinâmicos (marcos)
- * ========================================================= */
 export function computeBadges(context = {}) {
   const {
     totalPoints = 0,
-    // goals removido para evitar no-unused-vars
+    
     kudosReceivedThisMonth = 0,
     goalStreakDays = 0,
 
-    // 👇 novos campos vindos do Career.js
+    
     pdiItemsCompleted = 0,
     pdiPlansCompleted = 0,
   } = context;
 
   const badges = [];
 
-  // ====== EXEMPLOS EXISTENTES (não remova os seus) ======
+  
   if (totalPoints >= 100) {
     badges.push({
       key: "points_100",
@@ -411,7 +381,7 @@ export function computeBadges(context = {}) {
     });
   }
 
-  // ====== NOVOS BADGES DO PDI ======
+  
 
   if (pdiItemsCompleted >= 10) {
     badges.push({
@@ -443,10 +413,6 @@ export function computeBadges(context = {}) {
 
   return badges;
 }
-
-/** =========================================================
- *  9. Função de pontuação com multiplicador
- * ========================================================= */
 export function computeEffectivePoints(basePoints, options = {}) {
   const {
     isSeasonGoal = false,
@@ -473,9 +439,9 @@ export function computeEffectivePoints(basePoints, options = {}) {
   };
 }
 
-/** =========================================================
- *  10. Cálculo de streaks de metas concluídas
- * ========================================================= */
+/** 
+ streaks de metas concluídas
+ */
 export function computeGoalStreak(goals = [], today = new Date()) {
   const doneDates = goals
     .filter((g) => g.status === "concluida" && g.completedAt?.toDate)
@@ -549,7 +515,7 @@ export function computeGoalStreak(goals = [], today = new Date()) {
   if (last30.length === 1) bestLast30 = 1;
 
   const weekStart = new Date(todayMid);
-  const day = weekStart.getDay(); // 0=domingo
+  const day = weekStart.getDay(); 
   const diffToMonday = day === 0 ? 6 : day - 1;
   weekStart.setDate(weekStart.getDate() - diffToMonday);
   const weekEnd = new Date(weekStart);
@@ -568,17 +534,17 @@ export function computeGoalStreak(goals = [], today = new Date()) {
   };
 }
 
-/** =========================================================
- *  11. Sugestão de Missões do Dia (com DISC + PDI)
- * ========================================================= */
+/** 
+  Sugestão de Missões do Dia
+  */
 export function suggestDailyMissions({
   points = 0,
   goals = [],
   streak = 0,
   kudosSentToday = 0,
-  disc = null, // "D" | "I" | "S" | "C" | null
+  disc = null, 
 
-  // 🔹 Integração com PDI nas missões
+  // Integração com PDI nas missões
   hasPdiPlan = false,
   pdiProgress = 0,
 } = {}) {
@@ -601,7 +567,7 @@ export function suggestDailyMissions({
 
   const missions = [];
 
-  // Missão extra – fazer o DISC (quando ainda não configurado)
+  // Missão extra 
   if (!disc) {
     missions.push({
       key: "do_disc_assessment",
@@ -611,21 +577,21 @@ export function suggestDailyMissions({
     });
   }
 
-  // Missão 1 – manter movimento diário
+  // Missão 1 
   missions.push({
     key: "finish_one_goal",
     label: "Concluir pelo menos 1 meta hoje",
     done: doneToday >= 1,
   });
 
-  // Missão 2 – reforçar consistência (streak)
+  // Missão 2 
   missions.push({
     key: "keep_streak",
     label: "Manter sua sequência de dias produtivos",
     done: streakDays >= 1 && doneToday >= 1,
   });
 
-  // Missão 3 – contexto por pontos
+  // Missão 3 
   if (points < 100) {
     missions.push({
       key: "plan_new_goal",
@@ -642,13 +608,13 @@ export function suggestDailyMissions({
     });
   }
 
-  // 🔹 Missões específicas ligadas ao PDI
+  //  Missões PDI
   if (hasPdiPlan) {
     missions.push({
       key: "pdi_step_today",
       label: "Dar pelo menos 1 passo concreto no seu PDI hoje",
-      // Heurística simples: se você concluiu alguma meta hoje,
-      // consideramos que pode ser ligada ao PDI.
+      
+      
       done: doneToday >= 1,
     });
 
@@ -703,9 +669,9 @@ export function suggestDailyMissions({
   return missions;
 }
 
-/** =========================================================
- *  12. Estilo visual da badge de nível
- * ========================================================= */
+/** 
+    Estilo visual da badge 
+  */
 export function levelBadgeStyle(levelKey) {
   const bg =
     {
@@ -729,9 +695,9 @@ export function levelBadgeStyle(levelKey) {
   };
 }
 
-/** =========================================================
- *  13. Nível de Mentor (influência social)
- * ========================================================= */
+/** 
+        Nível de Mentor 
+   */
 export function computeMentorLevel({
   kudosSentTotal = 0,
   feedbackSentTotal = 0,
@@ -771,9 +737,9 @@ export function computeMentorLevel({
   };
 }
 
-/** =========================================================
- *  14. Helper de estilo DISC (texto explicativo)
- * ========================================================= */
+/** 
+  Helper DISC 
+  */
 export function describeDiscStyle(discKey) {
   switch ((discKey || "").toUpperCase()) {
     case "D":

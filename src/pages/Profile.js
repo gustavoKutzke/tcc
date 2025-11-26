@@ -18,14 +18,14 @@ import {
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-/* === Kudos === */
+/*Kudos  */
 import KudosModal from "../components/KudosModal";
 import { monthKeyFromDate } from "../lib/date";
 
-/* === Seção de Carreira (apenas gestor vê) === */
+/*Seção de Carreira (apenas gestor vê)*/
 import ProfileCareerCard from "../components/ProfileCareerCard";
 
-/* === Services específicos da página === */
+
 import {
   fetchUserByUid,
   listenCollaborators,
@@ -33,7 +33,7 @@ import {
   fetchFeedbackSignatures,
 } from "../services/profileService";
 
-/* ===== Helpers visuais ===== */
+/*Helpers visuais*/
 function Avatar({ name = "Usuário", photoURL, size = 48 }) {
   const initials = (name || "U")
     .split(" ")
@@ -98,7 +98,7 @@ function levelBadgeStyle(levelKey) {
   };
 }
 
-/* === DISC helpers === */
+/*DISC helpers*/
 const DISC_LABELS = {
   D: "Executor",
   I: "Comunicador",
@@ -146,7 +146,7 @@ function DiscChip({ code }) {
   );
 }
 
-/* ================= Helpers PDF ================= */
+/*Helpers PDF */
 function toBr(d) {
   try {
     if (!d) return "-";
@@ -257,7 +257,7 @@ async function exportFeedbackPDF(feedbackDoc, signatures) {
   pdf.save(`feedback_${feedbackDoc.collaboratorName || "colaborador"}.pdf`);
 }
 
-/* ================= PAGE ================= */
+/*PAGINAS*/
 export default function Profile() {
   const navigate = useNavigate();
 
@@ -275,7 +275,7 @@ export default function Profile() {
   const [kudosAll, setKudosAll] = useState([]);
   const monthKey = monthKeyFromDate();
 
-  // 1) Usuário logado
+  //Usuário logado
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
       if (!u) return navigate("/auth");
@@ -289,14 +289,14 @@ export default function Profile() {
 
   const isManager = me?.role === "gestor";
 
-  // 2) Lista de colaboradores (somente gestor)
+  //Lista de colaboradores (somente gestor)
   useEffect(() => {
     if (!isManager) return;
     const unsub = listenCollaborators(setUsers);
     return () => unsub && unsub();
   }, [isManager]);
 
-  // 3) Dados do colaborador selecionado + metas + feedbacks + kudos
+  //Dados do colaborador selecionado + metas + feedbacks + kudos
   useEffect(() => {
     const unsub = listenProfileData(subjectUid, monthKey, {
       onUser: setSubject,
@@ -308,13 +308,13 @@ export default function Profile() {
     return () => unsub && unsub();
   }, [subjectUid, monthKey]);
 
-  // 4) Filtro de metas
+  //Filtro de metas
   const goalsFiltered = useMemo(() => {
     if (statusFilter === "all") return goals;
     return goals.filter((g) => g.status === statusFilter);
   }, [goals, statusFilter]);
 
-  // 5) Conquistas
+  //Conquistas
   const badges = useMemo(() => {
     if (!subject) return [];
     return computeBadges({
@@ -323,7 +323,7 @@ export default function Profile() {
     });
   }, [subject, goals]);
 
-  // 6) Série mensal (metas concluídas por mês) — últimos 12 meses
+  // 6) Série mensal- últimos 12 meses
   const monthlySeries = useMemo(() => buildMonthlySeries(goals), [goals]);
 
   if (!me) {
@@ -336,7 +336,7 @@ export default function Profile() {
 
   const level = computeLevel(subject?.points || 0);
 
-  // PDF de um feedback específico (busca assinaturas via service)
+  // PDF de um feedback específico
   async function handleExportPDF(it) {
     try {
       const signatures = await fetchFeedbackSignatures(it.id);
@@ -354,7 +354,7 @@ export default function Profile() {
     0
   );
 
-  // Perfil DISC vindo do doc do usuário
+  
   const discDom = subject?.discProfile?.dominant || null;
   const discSec =
     subject?.discProfile?.secondary && subject.discProfile.secondary !== discDom
@@ -480,7 +480,7 @@ export default function Profile() {
         </div>
       )}
 
-      {/* === CARREIRA (somente gestor vê) === */}
+      {/*CARREIRA (somente gestor vê)*/}
       {isManager && subject && (
         <ProfileCareerCard subjectUid={subject.uid} isManager={true} />
       )}

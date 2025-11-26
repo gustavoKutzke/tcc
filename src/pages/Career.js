@@ -13,7 +13,7 @@ import {
   describeDiscStyle,
 } from "../lib/gamification";
 
-// 🔹 Services centralizando Firestore:
+
 import {
   listenCurrentUser,
   updateDailyMissionsBonus,
@@ -31,10 +31,10 @@ import {
 
 import { listenXpHistory } from "../services/xpService";
 
-// Bônus fixo por concluir todas as missões do dia
+
 const DAILY_MISSIONS_BONUS = 10;
 
-// helper para data local YYYY-MM-DD
+
 function todayLocalISO() {
   const d = new Date();
   const y = d.getFullYear();
@@ -43,7 +43,7 @@ function todayLocalISO() {
   return `${y}-${m}-${day}`;
 }
 
-// rótulos DISC reaproveitados aqui também
+
 const DISC_LABEL = {
   D: "Executor",
   I: "Comunicador",
@@ -57,31 +57,31 @@ export default function Career() {
   const [me, setMe] = useState(null);
   const [goals, setGoals] = useState([]);
   const [kudosThisMonth, setKudosThisMonth] = useState(0);
-  const [kudosSentToday, setKudosSentToday] = useState(0); // usado nas missões
+  const [kudosSentToday, setKudosSentToday] = useState(0);
 
-  // 🔹 PDI do colaborador
+  // PDI do colaborador
   const [pdiPlan, setPdiPlan] = useState(null);
   const [pdiItems, setPdiItems] = useState([]);
 
-  // ---- controls para celebração (level up / missões / DISC) ----
+  // ----celebração ----
   const prevLevelKeyRef = useRef(null);
   const prevMissionsAllDoneRef = useRef(false);
   const prevHasDiscRef = useRef(false);
 
-  const [celebrate, setCelebrate] = useState(false); // mostra confete
-  const [pulseBadge, setPulseBadge] = useState(false); // efeito no badge de nível
+  const [celebrate, setCelebrate] = useState(false); 
+  const [pulseBadge, setPulseBadge] = useState(false); 
 
   const isManager = me?.role === "gestor";
 
-  // 🔹 aba ativa: "overview" (Resumo) ou "history" (Evolução)
+  
   const [activeTab, setActiveTab] = useState("overview");
 
-  // 🔹 Histórico de XP
+  //Histórico de XP
   const [xpHistory, setXpHistory] = useState([]);
   const lastXpIdRef = useRef(null);
   const [xpToast, setXpToast] = useState(null);
 
-  // Redireciona se não estiver logado
+  
   useEffect(
     () =>
       auth.onAuthStateChanged((u) => {
@@ -90,7 +90,7 @@ export default function Career() {
     [navigate]
   );
 
-  // 🔹 Carrega usuário + stream em tempo real via service
+ 
   useEffect(() => {
     const unsub = listenCurrentUser(setMe);
     return () => {
@@ -98,7 +98,7 @@ export default function Career() {
     };
   }, []);
 
-  // 🔹 Metas do usuário (goals) via service
+  //Metas do usuário
   useEffect(() => {
     if (!me?.uid) return;
     const unsub = listenUserGoals(me.uid, setGoals);
@@ -107,7 +107,7 @@ export default function Career() {
     };
   }, [me?.uid]);
 
-  // 🔹 Kudos recebidos no mês via service
+  // Kudos recebidos no mês
   useEffect(() => {
     if (!me?.uid) return;
     const unsub = listenKudosReceivedThisMonth(me.uid, setKudosThisMonth);
@@ -116,7 +116,7 @@ export default function Career() {
     };
   }, [me?.uid]);
 
-  // 🔹 Kudos ENVIADOS hoje via service (para missão "Enviar 1 kudos/feedback")
+  //Kudos ENVIADOS hoje
   useEffect(() => {
     if (!me?.uid) return;
     const unsub = listenKudosSentToday(me.uid, setKudosSentToday);
@@ -125,7 +125,7 @@ export default function Career() {
     };
   }, [me?.uid]);
 
-  // 🔹 PDI: plano atual do colaborador
+  //PDI
   useEffect(() => {
     if (!me?.uid || isManager) {
       setPdiPlan(null);
@@ -142,7 +142,7 @@ export default function Career() {
     };
   }, [me?.uid, isManager]);
 
-  // 🔹 PDI: itens do plano
+  // PDI
   useEffect(() => {
     setPdiItems([]);
     if (!pdiPlan?.id) return;
@@ -153,7 +153,7 @@ export default function Career() {
     };
   }, [pdiPlan?.id]);
 
-  // 🔹 Histórico de XP (evolução)
+  //Histórico de XP (evolução)
   useEffect(() => {
     if (!me?.uid) return;
     const unsub = listenXpHistory(me.uid, setXpHistory, { limit: 50 });
@@ -165,18 +165,18 @@ export default function Career() {
   const level = computeLevel(me?.points || 0);
   const { next, progress, remain } = nextLevelProgress(me?.points || 0);
 
-  // Streak calculado com base nas metas concluídas
+  
   const streak = useMemo(
     () => computeGoalStreak(goals, new Date()),
     [goals]
   );
 
-  // Perfil DISC salvo no /users (dominant/secondary)
+  // Perfil DISC 
   const discProfile = me?.discProfile || null;
   const discDominant = discProfile?.dominant || null;
   const discSecondary = discProfile?.secondary || null;
 
-  // 🔹 Estatísticas do PDI atual (usadas no card e nas missões)
+  // Estatísticas do PDI atual
   const pdiStats = useMemo(() => {
     if (!pdiPlan) {
       return {
@@ -212,15 +212,15 @@ export default function Career() {
     };
   }, [pdiPlan, pdiItems]);
 
-  // Missões do dia / semana (inclui kudosSentToday + DISC + PDI)
+  // Missões do dia / semana 
   const missions = useMemo(
     () =>
       suggestDailyMissions({
         points: me?.points || 0,
         goals,
         streak,
-        kudosSentToday, // passado para gamification.js
-        disc: discDominant, // 🔹 DISC integra missões
+        kudosSentToday, 
+        disc: discDominant, 
         hasPdiPlan: pdiStats.hasPlan,
         pdiProgress: pdiStats.progress,
       }),
@@ -241,7 +241,7 @@ export default function Career() {
     [missions]
   );
 
-  // 🔹 Campos agregados de PDI para badges
+  
   const pdiItemsCompleted = me?.pdiItemsCompleted || 0;
   const pdiPlansCompleted = me?.pdiPlansCompleted || 0;
 
@@ -255,7 +255,7 @@ export default function Career() {
           typeof streak === "number"
             ? streak
             : streak?.current || streak?.currentStreak || 0,
-        // 👇 parâmetros para badges do PDI
+        
         pdiItemsCompleted,
         pdiPlansCompleted,
       }),
@@ -269,7 +269,7 @@ export default function Career() {
     ]
   );
 
-  // ---- detectar subida de nível (comparando level.key anterior vs atual) ----
+  //detectar subida de nível----
   useEffect(() => {
     if (!me) return;
     const currentKey = level.key;
@@ -286,7 +286,7 @@ export default function Career() {
     prevLevelKeyRef.current = currentKey;
   }, [me, level.key]);
 
-  // 🎉 Confete + BÔNUS quando TODAS as missões do dia forem concluídas
+  // Confete 
   useEffect(() => {
     if (!missionsAllDone || !me?.uid) {
       prevMissionsAllDoneRef.current = false;
@@ -301,13 +301,13 @@ export default function Career() {
       return;
     }
 
-    // só dispara quando muda de "não concluídas" -> "todas concluídas"
+    
     if (!prevMissionsAllDoneRef.current) {
       // animação
       setCelebrate(true);
       setTimeout(() => setCelebrate(false), 2200);
 
-      // bônus de pontos (regra antiga; se preferir, migrar depois pro xpService)
+      
       (async () => {
         try {
           const currentPoints = Number(me.points || 0);
@@ -332,7 +332,7 @@ export default function Career() {
     prevMissionsAllDoneRef.current = true;
   }, [missionsAllDone, me]);
 
-  // 🎉 Ritual de passagem DISC – primeira vez que o DISC aparece
+ 
   useEffect(() => {
     const hasDiscNow = !!discDominant;
     if (!prevHasDiscRef.current && hasDiscNow) {
@@ -342,19 +342,19 @@ export default function Career() {
     prevHasDiscRef.current = hasDiscNow;
   }, [discDominant]);
 
-  // 🔔 Toast de XP — dispara quando chega um novo evento no xpHistory
+  
   useEffect(() => {
     if (!xpHistory || xpHistory.length === 0) return;
     const latest = xpHistory[0];
     if (!latest) return;
 
-    // primeira carga: só registra o id, não mostra toast
+    
     if (!lastXpIdRef.current) {
       lastXpIdRef.current = latest.id;
       return;
     }
 
-    // se mudou o topo da lista, é um evento novo → mostra toast
+   
     if (lastXpIdRef.current !== latest.id) {
       lastXpIdRef.current = latest.id;
 
@@ -381,14 +381,14 @@ export default function Career() {
 
   return (
     <>
-      {/* CSS para a animação (injetado localmente) */}
+      {}
       <StyleAnimations />
       {celebrate && <ConfettiOverlay />}
       {xpToast && <XpToast event={xpToast} />}
 
       <h2 className="section-title">Mapa de Carreira</h2>
 
-      {/* Tabs: Resumo x Evolução */}
+      {}
       <div
         className="card"
         style={{
@@ -444,7 +444,7 @@ export default function Career() {
         <XpEvolutionTab events={xpHistory} />
       ) : (
         <>
-          {/* Cabeçalho com nível atual e progresso */}
+          {}
           <div
             className="card"
             style={{ marginBottom: 16, position: "relative" }}
@@ -522,7 +522,7 @@ export default function Career() {
             </div>
           </div>
 
-          {/* Trilha visual + Streaks lado a lado em telas maiores */}
+          {}
           <div
             className="grid"
             style={{
@@ -569,7 +569,7 @@ export default function Career() {
             </div>
           </div>
 
-          {/* CARD DISC – integra perfil comportamental na carreira */}
+          {}
           <div
             className="card"
             style={{ marginBottom: 16 }}
@@ -726,7 +726,7 @@ export default function Career() {
             )}
           </div>
 
-          {/* 🔹 Campanha de Desenvolvimento (PDI) */}
+          {}
           <div
             className="card"
             style={{ marginBottom: 16 }}
@@ -774,7 +774,7 @@ export default function Career() {
                   flexWrap: "wrap",
                 }}
               >
-                {/* gráfico circular de progresso */}
+                {}
                 <div
                   style={{
                     width: 96,
@@ -961,7 +961,7 @@ export default function Career() {
                   ))}
                 </ul>
 
-                {/* 🎯 Mensagem especial quando todas as missões do dia estão concluídas */}
+                {}
                 {missionsAllDone && (
                   <div
                     style={{
@@ -989,7 +989,7 @@ export default function Career() {
             )}
           </div>
 
-          {/* Benefícios do nível atual */}
+          {}
           <div
             className="card"
             style={{ marginBottom: 16 }}
@@ -1015,7 +1015,7 @@ export default function Career() {
             </ul>
           </div>
 
-          {/* Badges dinâmicos (marcos) */}
+          {}
           <div className="card">
             <h3 style={{ marginTop: 0, marginBottom: 10 }}>
               Conquistas (marcos)
@@ -1068,7 +1068,7 @@ export default function Career() {
   );
 }
 
-/** ===== Componente de Streak ===== */
+/**Componente de Streak*/
 function StreakPill({ label, value, highlight }) {
   return (
     <div
@@ -1110,7 +1110,7 @@ function StreakPill({ label, value, highlight }) {
   );
 }
 
-/** ===== Mini estatísticas do PDI ===== */
+/**estatísticas do PDI*/
 function PdiMiniStat({ label, value }) {
   return (
     <div
@@ -1136,7 +1136,7 @@ function PdiMiniStat({ label, value }) {
   );
 }
 
-/** ===== Trilha visual de níveis ===== */
+/**Trilha visual de níveis*/
 function CareerTrack({ points = 0 }) {
   const activeIdx = careerLevels.reduce(
     (acc, lv, idx) => (points >= lv.min ? idx : acc),
@@ -1145,7 +1145,7 @@ function CareerTrack({ points = 0 }) {
 
   return (
     <div style={{ display: "grid", gap: 12 }}>
-      {/* Cards empilhados (responsivo) */}
+      {}
       <div style={{ display: "grid", gap: 10 }}>
         {careerLevels.map((lv, i) => {
           const active = i <= activeIdx;
@@ -1208,7 +1208,7 @@ function CareerTrack({ points = 0 }) {
   );
 }
 
-/** ===== Tab Evolução (Histórico de XP) ===== */
+/** Histórico de XP */
 function XpEvolutionTab({ events }) {
   if (!events || events.length === 0) {
     return (
@@ -1323,7 +1323,7 @@ function xpSourceDescription(e) {
     case "weekly_missions":
       return "Bônus por missões semanais";
     case "pdi_completed":
-      // pode ser plano ou item, mas aqui é um nome genérico
+    
       return pts > 0
         ? "Progresso no PDI"
         : "Ajuste de XP do PDI";
@@ -1334,7 +1334,7 @@ function xpSourceDescription(e) {
   }
 }
 
-/* ===================== Toast de XP ===================== */
+/*Toast de XP*/
 function XpToast({ event }) {
   const pts = Number(event.points || 0);
   const positive = pts >= 0;
@@ -1407,19 +1407,19 @@ function xpSourceLabel(source) {
   }
 }
 
-/* ===================== Confete leve (sem libs) ===================== */
+/*Confete leve */
 function ConfettiOverlay({ pieces = 36, duration = 2000 }) {
-  // gera um conjunto de “papéis” (spans) com animações aleatórias
+  
   const items = useMemo(() => {
     const arr = [];
     for (let i = 0; i < pieces; i++) {
       arr.push({
         id: i,
-        left: Math.random() * 100, // %
-        delay: Math.random() * 120, // ms
-        rot: Math.random() * 360, // deg
-        size: 6 + Math.random() * 10, // px
-        fall: 60 + Math.random() * 20, // vh
+        left: Math.random() * 100, 
+        delay: Math.random() * 120, 
+        rot: Math.random() * 360, 
+        size: 6 + Math.random() * 10, 
+        fall: 60 + Math.random() * 20, 
         emoji:
           Math.random() < 0.4
             ? "⭐"
@@ -1433,7 +1433,7 @@ function ConfettiOverlay({ pieces = 36, duration = 2000 }) {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      // fim automático — overlay some quando pai desliga
+     
     }, duration + 400);
     return () => clearTimeout(t);
   }, [duration]);
@@ -1467,7 +1467,7 @@ function ConfettiOverlay({ pieces = 36, duration = 2000 }) {
   );
 }
 
-/* ===================== CSS Animations ===================== */
+/* CSS Animations  */
 function StyleAnimations() {
   return (
     <style>

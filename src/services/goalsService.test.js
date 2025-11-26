@@ -9,12 +9,12 @@ import {
   deleteGoalById,
 } from "./goalsService";
 
-// mock de ../lib/firebase
+
 jest.mock("../lib/firebase", () => ({
   db: {},
 }));
 
-// mock de firebase/firestore (só o que usamos aqui)
+
 jest.mock("firebase/firestore", () => ({
   collection: jest.fn(() => "COL_REF"),
   query: jest.fn(() => "Q_REF"),
@@ -23,7 +23,7 @@ jest.mock("firebase/firestore", () => ({
   onSnapshot: jest.fn(),
   addDoc: jest.fn(),
   deleteDoc: jest.fn(),
-  doc: jest.fn(), // não precisamos do retorno
+  doc: jest.fn(),
   updateDoc: jest.fn(),
   Timestamp: {
     fromDate: jest.fn(),
@@ -50,7 +50,7 @@ describe("goalsService", () => {
     jest.clearAllMocks();
   });
 
-  /* ========= Escutas ========= */
+ 
 
   test("listenUserGoals retorna noop se uid não informado", () => {
     const setGoals = jest.fn();
@@ -58,7 +58,7 @@ describe("goalsService", () => {
     const unsub = listenUserGoals("", setGoals);
     expect(typeof unsub).toBe("function");
 
-    // não deve montar query nem snapshot
+    
     expect(collection).not.toHaveBeenCalled();
     expect(onSnapshot).not.toHaveBeenCalled();
   });
@@ -66,7 +66,7 @@ describe("goalsService", () => {
   test("listenUserGoals monta query e converte documentos corretamente", () => {
     const setGoals = jest.fn();
 
-    // snapshot fake
+    
     onSnapshot.mockImplementation((_q, cb) => {
       const snap = {
         docs: [
@@ -133,7 +133,7 @@ describe("goalsService", () => {
     expect(unsub).toBe("UNSUB_MANAGER");
   });
 
-  /* ========= createGoal ========= */
+  
 
   test("createGoal monta payload corretamente com dueDate", async () => {
     Timestamp.fromDate.mockImplementation((d) => ({
@@ -194,7 +194,7 @@ describe("goalsService", () => {
     expect(Timestamp.fromDate).not.toHaveBeenCalled();
   });
 
-  /* ========= toggleGoalStatus ========= */
+ 
 
   test("toggleGoalStatus marca meta aberta como concluída", async () => {
     serverTimestamp.mockReturnValue("NOW");
@@ -228,13 +228,13 @@ describe("goalsService", () => {
   });
 
   test("toggleGoalStatus ignora goal inválido", async () => {
-    await toggleGoalStatus({}); // sem id / ownerUid
+    await toggleGoalStatus({});
 
     expect(doc).not.toHaveBeenCalled();
     expect(updateDoc).not.toHaveBeenCalled();
   });
 
-  /* ========= deleteGoalById ========= */
+  
 
   test("deleteGoalById chama deleteDoc quando id é válido", async () => {
     await deleteGoalById("g1");

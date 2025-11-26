@@ -1,6 +1,6 @@
 // src/lib/date.js
 export function monthKeyFromDate(d = new Date()) {
-  // AAAA-MM
+ 
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, "0")}`;
 }
 export function startOfToday() {

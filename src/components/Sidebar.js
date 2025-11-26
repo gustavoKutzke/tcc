@@ -8,7 +8,7 @@ export default function Sidebar() {
   const loc = useLocation();
   const [userData, setUserData] = useState(null);
 
-  // Carrega informações do usuário logado
+  
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(async (u) => {
       if (!u) return setUserData(null);
@@ -19,7 +19,7 @@ export default function Sidebar() {
         const base = { uid: u.uid, ...snap.data() };
         setUserData(base);
 
-        // Atualiza em tempo real (mudança de pontos, etc.)
+       
         onSnapshot(ref, (s2) => {
           if (s2.exists()) setUserData({ uid: u.uid, ...s2.data() });
         });
@@ -90,7 +90,7 @@ export default function Sidebar() {
   );
 }
 
-/* ======= Links da navegação ======= */
+
 const links = [
   { label: "Dashboard", to: "/", icon: "🏠" },
   { label: "Metas", to: "/goals", icon: "🎯" },
@@ -98,7 +98,7 @@ const links = [
   { label: "Feedback", to: "/feedback", icon: "💬" },
 ];
 
-/* ======= Estilos ======= */
+
 const sidebar = {
   width: 240,
   minHeight: "100vh",

@@ -1,4 +1,4 @@
-// Importações corretas da versão 9
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -13,10 +13,9 @@ const firebaseConfig = {
 
   messagingSenderId: "510887510585",
   appId: "1:510887510585:web:20299af380e01da11303e8",
-  measurementId: "G-XXXXXXX" // aparece no console, se tiver Analytics
+  measurementId: "G-XXXXXXX" 
 };
 
-// Inicializa
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);

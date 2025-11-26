@@ -6,8 +6,8 @@ import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 const LEVELS = ["Estagiário", "Júnior", "Pleno", "Sênior", "Líder"];
 
 export default function ProfileCareerCard({
-  subjectUid,     // uid do colaborador sendo exibido
-  isManager,      // boolean: se o usuário logado é gestor
+  subjectUid,     
+  isManager,      
 }) {
   const meUid = auth.currentUser?.uid;
   const canEdit = isManager || subjectUid === meUid;
@@ -35,7 +35,7 @@ export default function ProfileCareerCard({
       if (!subjectUid) return;
       setLoading(true);
       try {
-        // carreira em subcoleção: /users/{uid}/career/current
+        
         const snap = await getDoc(doc(db, "users", subjectUid, "career", "current"));
         if (mounted && snap.exists()) {
           const data = snap.data();

@@ -7,12 +7,7 @@ const XP_VALUES = {
   PDI_PLAN_COMPLETED: 50,
 };
 
-/**
- * Normaliza o status para comparação:
- * - remove acentos
- * - converte para minúsculas
- * - remove espaços extras
- */
+
 function isDoneStatus(status) {
   if (!status) return false;
 
@@ -25,10 +20,7 @@ function isDoneStatus(status) {
   return normalized === "concluida";
 }
 
-/**
- * Handler puro para o trigger de item de PDI.
- * Exportado via _test para facilitar testes unitários.
- */
+
 async function handlePdiItemUpdated(event, deps = { db, admin }) {
   const before = event.data.before.data();
   const after = event.data.after.data();
@@ -37,29 +29,29 @@ async function handlePdiItemUpdated(event, deps = { db, admin }) {
   const wasDone = isDoneStatus(before.status);
   const isDone = isDoneStatus(after.status);
 
-  // Só dispara quando muda de "não concluída" para "concluída"
+ 
   if (wasDone || !isDone) return;
 
-  // Se já tiver doneAt, significa que o XP desse item já foi aplicado
+  
   if (after.doneAt) return;
 
   const planId = event.params.planId;
 
-  // Descobre o dono do plano
+ 
   const planSnap = await deps.db.collection("pdiPlans").doc(planId).get();
   const plan = planSnap.exists ? planSnap.data() : null;
   if (!plan || !plan.ownerUid) return;
 
   const uid = plan.ownerUid;
 
-  // Incrementa pontos do dono do plano
+  
   await deps.db.collection("users").doc(uid).update({
     points: deps.admin.firestore.FieldValue.increment(
       XP_VALUES.PDI_ITEM_COMPLETED
     ),
   });
 
-  // Log de XP
+  
   await deps.db.collection("xpLog").add({
     uid,
     source: "pdi_item_completed",
@@ -78,10 +70,7 @@ async function handlePdiItemUpdated(event, deps = { db, admin }) {
   });
 }
 
-/**
- * Handler puro para o trigger de plano de PDI.
- * Dá XP quando o progresso cruza de <100 para >=100.
- */
+
 async function handlePdiPlanUpdated(event, deps = { db, admin }) {
   const before = event.data.before.data();
   const after = event.data.after.data();
@@ -93,10 +82,10 @@ async function handlePdiPlanUpdated(event, deps = { db, admin }) {
   const beforeProg = Number(before.progress || 0);
   const afterProg = Number(after.progress || 0);
 
-  // Só dispara quando cruza de <100 pra >=100
+  
   if (beforeProg >= 100 || afterProg < 100) return;
 
-  // Evita aplicar XP do plano mais de uma vez
+  // Evita aplicar XP mais de uma vez
   if (after.xpAppliedPlan) return;
 
   // Aplica XP do plano concluído
@@ -125,7 +114,7 @@ async function handlePdiPlanUpdated(event, deps = { db, admin }) {
   });
 }
 
-// Triggers reais usados pelo Firebase
+
 exports.onPdiItemUpdated = onDocumentUpdated(
   "pdiPlans/{planId}/items/{itemId}",
   (event) => handlePdiItemUpdated(event)
@@ -136,7 +125,7 @@ exports.onPdiPlanUpdated = onDocumentUpdated(
   (event) => handlePdiPlanUpdated(event)
 );
 
-// Exportações auxiliares para testes unitários
+
 exports._test = {
   isDoneStatus,
   handlePdiItemUpdated,

@@ -14,7 +14,7 @@ import { monthKeyFromDate } from "../utils/dateUtils";
 import { grantKudosSentXp } from "./xpService";
 
 /**
- * Kudos recebidos no mês atual — soma de valores
+ * Kudos recebidos no mês atual
  */
 export function listenKudosReceivedThisMonth(uid, setSum) {
   if (!uid) return () => {};
@@ -116,11 +116,7 @@ export function listenKudosSentByUserMonth(uid, monthKey, setKudos) {
   });
 }
 
-/**
- * 🚀 ENVIAR KUDOS + XP
- * - enviou → XP local (toast na hora)
- * - recebeu → XP via Cloud Function onCreate (backend)
- */
+
 export async function sendKudosWithXp({
   fromUid,
   fromName,
@@ -149,14 +145,14 @@ export async function sendKudosWithXp({
     monthKey,
     createdAt: serverTimestamp(),
 
-    // ✅ importante pro backend evitar duplicação em retries
+    
     xpReceiverApplied: false,
   };
 
-  // 1) Criar kudos no Firestore
+  // Criar kudos no Firestore
   const ref = await addDoc(collection(db, "kudos"), payload);
 
-  // 2) XP para o REMETENTE (client)
+  
   await grantKudosSentXp({
     uid: fromUid,
     meta: {
@@ -167,9 +163,6 @@ export async function sendKudosWithXp({
       value: numericValue,
     },
   });
-
-  // ❌ NÃO aplica mais XP pro recebedor aqui
-  // (Cloud Function onCreate faz isso automaticamente)
 
   return ref.id;
 }

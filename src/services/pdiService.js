@@ -15,9 +15,7 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-/* ====================== */
-/* AUTH / USERS HELPERS   */
-/* ====================== */
+
 
 export function listenCurrentUser(callback) {
   const unsub = onAuthStateChanged(auth, async (u) => {
@@ -49,9 +47,7 @@ export function listenCollaborators(callback) {
   });
 }
 
-/* ====================== */
-/* PDI – PLANO            */
-/* ====================== */
+
 
 export function listenPdiPlanForUser(subjectUid, onPlanChange) {
   if (!subjectUid) {
@@ -134,7 +130,7 @@ export async function savePdiHeader(params) {
   return params.planId;
 }
 
-/* ===== helpers de progresso ===== */
+/*helpers de progresso*/
 
 export function calculateProgressFromItems(items = []) {
   if (!items.length) return 0;
@@ -156,7 +152,7 @@ export async function syncPlanProgress(planId, items) {
   return recomputeAndUpdateProgress(planId, items || []);
 }
 
-/* ===== itens ===== */
+/*itens*/
 
 export async function createPdiItem(planId, currentItems = []) {
   const nextOrder =

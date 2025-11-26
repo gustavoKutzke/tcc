@@ -13,7 +13,7 @@ import {
   updatePdiItem,
 } from "./pdiService";
 
-// ===== MOCKS BÁSICOS DO FIREBASE =====
+
 jest.mock("../lib/firebase", () => ({
   auth: {},
   db: {},
@@ -56,10 +56,7 @@ describe("pdiService", () => {
     jest.clearAllMocks();
   });
 
-  /* ====================== */
-  /* listenCollaborators    */
-  /* ====================== */
-
+ 
   test("listenCollaborators monta query e converte docs", () => {
     const cb = jest.fn();
 
@@ -87,9 +84,7 @@ describe("pdiService", () => {
     expect(unsub).toBe("UNSUB_COLLABS");
   });
 
-  /* ====================== */
-  /* listenPdiPlanForUser   */
-  /* ====================== */
+ 
 
   test("listenPdiPlanForUser retorna noop e null se subjectUid vazio", () => {
     const cb = jest.fn();
@@ -145,9 +140,7 @@ describe("pdiService", () => {
     expect(listenPdiPlanByOwnerUid).toBe(listenPdiPlanForUser);
   });
 
-  /* ====================== */
-  /* listenPdiItems         */
-  /* ====================== */
+ 
 
   test("listenPdiItems retorna noop e [] se planId vazio", () => {
     const cb = jest.fn();
@@ -189,9 +182,7 @@ describe("pdiService", () => {
     expect(unsub).toBe("UNSUB_ITEMS");
   });
 
-  /* ====================== */
-  /* savePdiHeader          */
-  /* ====================== */
+  
 
   test("savePdiHeader lança erro se não tiver ownerUid/subjectUid", async () => {
     await expect(
@@ -256,9 +247,7 @@ describe("pdiService", () => {
     });
   });
 
-  /* ====================== */
-  /* calculateProgress / syncPlanProgress */
-  /* ====================== */
+ 
 
   test("calculateProgressFromItems retorna 0 para lista vazia", () => {
     expect(calculateProgressFromItems([])).toBe(0);
@@ -301,9 +290,7 @@ describe("pdiService", () => {
     });
   });
 
-  /* ====================== */
-  /* createPdiItem          */
-  /* ====================== */
+  
 
   test("createPdiItem cria item com order 1 quando lista vazia", async () => {
     serverTimestamp.mockReturnValue("NOW");
@@ -346,9 +333,7 @@ describe("pdiService", () => {
     expect(result.id).toBe("ITEM_2");
   });
 
-  /* ====================== */
-  /* duplicatePdiItem       */
-  /* ====================== */
+ 
 
   test("duplicatePdiItem cria item com campos resetados e order + 0.1", async () => {
     serverTimestamp.mockReturnValue("NOW");
@@ -384,9 +369,7 @@ describe("pdiService", () => {
     });
   });
 
-  /* ====================== */
-  /* deletePdiItem          */
-  /* ====================== */
+
 
   test("deletePdiItem chama deleteDoc com caminho correto", async () => {
     await deletePdiItem("PLAN_1", "ROW_1");
@@ -401,9 +384,7 @@ describe("pdiService", () => {
     expect(deleteDoc).toHaveBeenCalledTimes(1);
   });
 
-  /* ====================== */
-  /* updatePdiItem          */
-  /* ====================== */
+  
 
   test("updatePdiItem atualiza item e não recalcula progresso se currentItems não for array", async () => {
     await updatePdiItem("PLAN_1", "ROW_1", { status: "em_andamento" });
@@ -423,8 +404,7 @@ describe("pdiService", () => {
 
     await updatePdiItem("PLAN_1", "i2", { status: "concluida" }, currentItems);
 
-    // 1ª chamada: update do item
-    // 2ª chamada: update do progress no plano
+    
     expect(updateDoc).toHaveBeenCalledTimes(2);
 
     const firstPatch = updateDoc.mock.calls[0][1];

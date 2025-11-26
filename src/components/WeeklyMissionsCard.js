@@ -9,11 +9,11 @@ import { startOfWeek, endOfWeek, weekKey } from "../lib/week";
 
 export default function WeeklyMissionsCard() {
   const [me, setMe] = useState(null);
-  const [progress, setProgress] = useState({}); // {missionKey: number}
-  const [claims, setClaims] = useState({});     // {missionKey: true}
+  const [progress, setProgress] = useState({}); 
+  const [claims, setClaims] = useState({});     
   const [loading, setLoading] = useState(false);
 
-  // usuário logado + escuta claims desta semana
+  
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(async (u) => {
       if (!u) { setMe(null); return; }
@@ -126,7 +126,7 @@ export default function WeeklyMissionsCard() {
                 </div>
               </div>
 
-              {/* barra de progresso */}
+              {}
               <div style={{
                 marginTop: 10,
                 background: "#f3ede3",

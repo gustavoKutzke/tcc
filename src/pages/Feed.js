@@ -6,7 +6,7 @@ import { auth, db } from "../lib/firebase";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-/** Util: YYYY-MM (p/ filtrar kudos do mês atual) */
+
 function monthKeyFromDate(d = new Date()) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -17,18 +17,18 @@ export default function Feed() {
   const [me, setMe] = useState(null);
   const [kudos, setKudos] = useState([]);
   const [goals, setGoals] = useState([]);
-  const [filter, setFilter] = useState("all"); // all | 7days | mine
+  const [filter, setFilter] = useState("all"); 
   const mk = monthKeyFromDate();
 
-  /* ===== Auth (para filtro "Meu feed") ===== */
+  
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setMe(u || null));
     return () => unsub?.();
   }, []);
 
-  /* ===== Streams SIMPLES (sem fallback dentro do onSnapshot) ===== */
+  
   useEffect(() => {
-    // KUDOS: mês atual
+    
     const qK = query(
       collection(db, "kudos"),
       where("monthKey", "==", mk),
@@ -54,7 +54,7 @@ export default function Feed() {
       setKudos(arr);
     });
 
-    // GOALS: apenas concluídas
+    
     const qG = query(
       collection(db, "goals"),
       where("status", "==", "concluida"),
@@ -84,18 +84,18 @@ export default function Feed() {
     };
   }, [mk]);
 
-  /* ===== Feed combinado + filtros ===== */
+  
   const items = useMemo(() => {
     let combined = [...kudos, ...goals];
 
-    // filtro últimos 7 dias
+    
     if (filter === "7days") {
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       combined = combined.filter((it) => it.date >= weekAgo);
     }
 
-    // filtro "Meu feed": envolve eu reconhecer / ser reconhecido / metas minhas
+    
     if (filter === "mine" && me) {
       combined = combined.filter(
         (it) =>
@@ -105,7 +105,7 @@ export default function Feed() {
       );
     }
 
-    // ordena por data (desc)
+    
     combined.sort((a, b) => b.date - a.date);
     return combined;
   }, [kudos, goals, filter, me]);
@@ -114,7 +114,7 @@ export default function Feed() {
     <div>
       <h2 className="section-title">📋 Mural de Feedbacks</h2>
 
-      {/* Filtros */}
+      {}
       <div className="btn-row" style={{ marginBottom: 16 }}>
         <button
           className={`btn ${filter === "all" ? "btn-primary" : ""}`}
@@ -155,7 +155,7 @@ export default function Feed() {
   );
 }
 
-/* ====== Cards ====== */
+
 
 function KudoCard({ it }) {
   return (
@@ -189,7 +189,7 @@ function GoalCard({ it }) {
   );
 }
 
-/* ===== CSS do feed (injetado uma única vez) ===== */
+/*CSS do feed*/
 const css = `
 .feed-grid {
   display: grid;
@@ -271,7 +271,7 @@ const css = `
 .card.kudo strong { color: #3e2c22; }
 `;
 
-/* injeta o CSS inline uma única vez */
+
 if (typeof document !== "undefined" && !document.getElementById("feed-css")) {
   const style = document.createElement("style");
   style.id = "feed-css";

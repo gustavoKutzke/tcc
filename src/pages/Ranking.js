@@ -9,18 +9,18 @@ import {
   fetchKudosForMonth,
 } from "../services/rankingService";
 
-/* ================== Página Unificada: Ranking + Destaques ================== */
+
 
 export default function Ranking() {
   const navigate = useNavigate();
 
-  // redireciona se não estiver logado
+
   useEffect(
     () => auth.onAuthStateChanged((u) => !u && navigate("/auth")),
     [navigate]
   );
 
-  // usuário logado (para mostrar "meu desempenho" e saber se é gestor)
+ 
   const [me, setMe] = useState(null);
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(async (u) => {
@@ -36,18 +36,18 @@ export default function Ranking() {
 
   const isManager = me?.role === "gestor";
 
-  // Modo de visualização
-  const [view, setView] = useState("ranking"); // 'ranking' | 'highlights'
+  
+  const [view, setView] = useState("ranking"); 
 
-  // ====== Estados do modo Ranking ======
-  const [period, setPeriod] = useState("weekly"); // 'weekly' | 'monthly'
-  const [data, setData] = useState([]); // [{uid, name, points, tasks}]
-  const [dailySeries, setDailySeries] = useState([]); // [{date:'YYYY-MM-DD', points, tasks}]
-  const [dailyPrevSeries, setDailyPrevSeries] = useState([]); // período anterior
-  const [metric, setMetric] = useState("points"); // 'points' | 'tasks'
+  //Estados do modo Ranking 
+  const [period, setPeriod] = useState("weekly"); 
+  const [data, setData] = useState([]); 
+  const [dailySeries, setDailySeries] = useState([]); 
+  const [dailyPrevSeries, setDailyPrevSeries] = useState([]); 
+  const [metric, setMetric] = useState("points"); 
   const [loading, setLoading] = useState(true);
 
-  // janela do período (Date start inclusivo, end exclusivo)
+ 
   const { startDate, endDate, title } = useMemo(() => {
     const now = new Date();
     const end = new Date(
@@ -61,9 +61,9 @@ export default function Ranking() {
         now.getFullYear(),
         now.getMonth(),
         now.getDate() - 6
-      ); // últimos 7 dias
+      ); 
     } else {
-      start = new Date(now.getFullYear(), now.getMonth(), 1); // mês atual
+      start = new Date(now.getFullYear(), now.getMonth(), 1); 
     }
     return {
       startDate: start,
@@ -75,10 +75,10 @@ export default function Ranking() {
     };
   }, [period]);
 
-  // carrega dados do período atual (metas concluídas)
+ 
   useEffect(() => {
     async function load() {
-      if (!me) return; // espera saber se é gestor/colaborador
+      if (!me) return; 
       setLoading(true);
       try {
         const goals = await fetchGoalsInRange({
@@ -87,7 +87,7 @@ export default function Ranking() {
           ownerUid: isManager ? null : me.uid,
         });
 
-        // agrega por usuário (somente metas concluídas)
+        
         const map = new Map();
         const rows = [];
         goals.forEach((g) => {
@@ -130,7 +130,7 @@ export default function Ranking() {
     load();
   }, [startDate, endDate, me, isManager]);
 
-  // carrega dados do período anterior (mesma duração)
+ 
   useEffect(() => {
     async function loadPrev() {
       if (!me) return;
@@ -146,7 +146,7 @@ export default function Ranking() {
         start.getFullYear(),
         start.getMonth(),
         start.getDate()
-      ); // início do atual
+      ); 
       const prevStart = new Date(prevEnd);
       prevStart.setDate(prevStart.getDate() - daysCount);
 
@@ -175,11 +175,11 @@ export default function Ranking() {
     loadPrev();
   }, [startDate, endDate, me, isManager]);
 
-  // ====== Destaques (mês atual) ======
+  //Destaques
   const [hlLoading, setHlLoading] = useState(false);
-  const [topPointsMonth, setTopPointsMonth] = useState([]); // metas concluídas (pontos no mês)
-  const [topKudosMonth, setTopKudosMonth] = useState([]); // kudos recebidos no mês (valor)
-  const [topTasksMonth, setTopTasksMonth] = useState([]); // metas concluídas (quantidade no mês)
+  const [topPointsMonth, setTopPointsMonth] = useState([]); 
+  const [topKudosMonth, setTopKudosMonth] = useState([]); 
+  const [topTasksMonth, setTopTasksMonth] = useState([]); 
 
   useEffect(() => {
     if (view !== "highlights" || !me) return;
@@ -187,20 +187,20 @@ export default function Ranking() {
     async function loadHighlights() {
       setHlLoading(true);
       try {
-        // janela do mês (fixo para destaques)
+        
         const now = new Date();
         const startM = new Date(now.getFullYear(), now.getMonth(), 1);
         const endM = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
-        // 1) metas concluídas no mês => agregamos (points e tasks) por ownerUid
+        
         const goalsMonth = await fetchGoalsInRange({
           start: startM,
           end: endM,
           ownerUid: isManager ? null : me.uid,
         });
 
-        const mapPoints = new Map(); // uid -> {uid,name,points}
-        const mapTasks = new Map(); // uid -> {uid,name,tasks}
+        const mapPoints = new Map();
+        const mapTasks = new Map(); 
         goalsMonth.forEach((g) => {
           if (g.status !== "concluida") return;
           const uid = g.ownerUid;
@@ -222,14 +222,14 @@ export default function Ranking() {
         setTopPointsMonth(listPoints);
         setTopTasksMonth(listTasks);
 
-        // 2) kudos recebidos no mês
+        
         const monthKey = monthKeyFromDate(now);
         const kudosRows = await fetchKudosForMonth({
           monthKey,
           toUid: isManager ? null : me.uid,
         });
 
-        const mapK = new Map(); // toUid -> {uid,name,total}
+        const mapK = new Map(); 
         kudosRows.forEach((k) => {
           const uid = k.toUid;
           const name = k.toName || k.toUid || "—";
@@ -249,7 +249,7 @@ export default function Ranking() {
     loadHighlights();
   }, [view, me, isManager]);
 
-  // ====== Meu desempenho no período ======
+  //Meu desempenho no período
   const myRow = useMemo(
     () => (me && data ? data.find((r) => r.uid === me.uid) || null : null),
     [me, data]
@@ -267,7 +267,7 @@ export default function Ranking() {
     <>
       <h2 className="section-title">Ranking / Destaques</h2>
 
-      {/* Toggle de modo */}
+      {}
       <div className="card" style={{ marginBottom: 12 }}>
         <div className="btn-row">
           <button
@@ -323,7 +323,7 @@ export default function Ranking() {
 
       {view === "ranking" ? (
         <>
-          {/* Meu desempenho no período */}
+          {}
           {me && (
             <div
               className="card"
@@ -390,7 +390,7 @@ export default function Ranking() {
             </div>
           )}
 
-          {/* Top 3 do período atual */}
+          {/* Top 3 */}
           <div
             className="grid"
             style={{
@@ -433,7 +433,7 @@ export default function Ranking() {
               ))}
           </div>
 
-          {/* Barras por colaborador */}
+          {}
           <div className="card" style={{ marginTop: 16 }}>
             <h3 style={{ marginBottom: 6 }}>Pontos por Colaborador</h3>
             {loading ? (
@@ -449,7 +449,7 @@ export default function Ranking() {
             </p>
           </div>
 
-          {/* Linha diária (atual) */}
+          {}
           <div className="card" style={{ marginTop: 16 }}>
             <div
               style={{
@@ -560,7 +560,7 @@ export default function Ranking() {
           </div>
         </>
       ) : (
-        // ===================== Destaques do Mês =====================
+        //Destaques do Mês
         <>
           <div className="card" style={{ marginBottom: 8 }}>
             <h3 style={{ margin: 0 }}>Destaques do Mês</h3>
@@ -621,7 +621,7 @@ export default function Ranking() {
   );
 }
 
-/* ================== Destaques: Card ================== */
+/* Destaques*/
 function HighlightCard({
   title,
   loading,
@@ -688,7 +688,7 @@ function HighlightCard({
   );
 }
 
-/* ================== Export CSV (modo Ranking) ================== */
+/*Export CSV*/
 function exportCSV(rankRows, dailyRows, period) {
   const lines = [];
   lines.push(`Periodo,${period === "weekly" ? "Semanal" : "Mensal"}`);
@@ -720,7 +720,7 @@ function exportCSV(rankRows, dailyRows, period) {
   URL.revokeObjectURL(url);
 }
 
-/* ================== Gráficos (modo Ranking) ================== */
+/*Gráficos*/
 function BarChart({ data, height = 260, padding = 32 }) {
   const top = data.slice(0, 10);
   const labels = top.map((d) => d.name || "—");
@@ -959,7 +959,7 @@ function LineChartCompare({
           );
         })}
 
-        {/* período anterior (tracejado) */}
+        {}
         <path
           d={path(pPrev)}
           fill="none"
@@ -967,10 +967,10 @@ function LineChartCompare({
           strokeWidth="2"
           strokeDasharray="6 6"
         />
-        {/* período atual (sólido dourado) */}
+        {}
         <path d={path(pNow)} fill="none" stroke="#c8a848" strokeWidth="2.5" />
 
-        {/* pontos do período atual */}
+        {}
         {pNow.map((p, i) => (
           <g key={i}>
             <circle
@@ -1005,7 +1005,7 @@ function LineChartCompare({
   );
 }
 
-/* ================== Utils ================== */
+/*Utils*/
 function monthKeyFromDate(d = new Date()) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -1037,7 +1037,7 @@ function enumerateDays(start, endExcl) {
 }
 function formatBr(iso) {
   if (!iso || typeof iso !== "string") return "";
-  const [, m, d] = iso.split("-"); // ignora o ano pra não gerar var não usada
+  const [, m, d] = iso.split("-"); 
   return `${d}/${m}`;
 }
 function shorten(str, max) {
@@ -1045,7 +1045,7 @@ function shorten(str, max) {
   return str.length > max ? str.slice(0, max - 1) + "…" : str;
 }
 
-/* ===== estilos (marrom + dourado) ===== */
+
 const table = {
   width: "100%",
   borderCollapse: "separate",
@@ -1068,7 +1068,7 @@ const activeBtn = {
   boxShadow: "0 0 0 4px rgba(200,168,72,.25)",
 };
 
-/* ===== ícone de medalha ===== */
+
 function medal(i) {
   if (i === 0) return "🥇";
   if (i === 1) return "🥈";
@@ -1076,7 +1076,7 @@ function medal(i) {
   return "🏅";
 }
 
-/* ===== níveis gamificados por pontos do período ===== */
+/* níveis gamificados por pontos do período */
 function levelFromPoints(points) {
   const p = Number(points || 0);
   if (p >= 700) return "Lenda";

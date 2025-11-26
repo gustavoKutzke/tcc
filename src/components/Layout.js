@@ -9,7 +9,7 @@ import { computeLevel } from "../lib/gamification";
 export default function Layout({ children }) {
   const navigate = useNavigate();
 
-  // controla o drawer no mobile
+  
   const [open, setOpen] = useState(false);
 
   const [userData, setUserData] = useState(null);
@@ -35,7 +35,7 @@ export default function Layout({ children }) {
 
       if (snap.exists()) {
         setUserData({ uid: u.uid, ...snap.data() });
-        // acompanha mudanças (ex.: pontos) em tempo real
+        // acompanha mudanças em tempo real
         unsubUserSnap = onSnapshot(ref, (s2) => {
           if (s2.exists()) setUserData({ uid: u.uid, ...s2.data() });
         });
@@ -68,7 +68,7 @@ export default function Layout({ children }) {
 
   return (
     <div className={`app baruk-shell ${open ? "is-open" : ""}`}>
-      {/* Topbar só no mobile */}
+      {}
       <header className="baruk-topbar">
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button
@@ -82,9 +82,9 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      {/* Sidebar */}
+      
       <aside className="sidebar baruk-sidebar">
-        {/* Marca */}
+        {}
         <div className="brand" style={{ padding: 16, display: "flex", alignItems: "center", gap: 10 }}>
           <div className="badge" />
           <div className="name">meu-tcc</div>
@@ -127,7 +127,7 @@ export default function Layout({ children }) {
           </div>
         )}
 
-        {/* Navegação */}
+        {}
         <nav className="nav" onClick={closeIfMobile}>
           <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
             <span>Início</span>
@@ -173,7 +173,7 @@ export default function Layout({ children }) {
         </nav>
       </aside>
 
-      {/* Overlay para fechar o drawer no mobile */}
+      {}
       <div
         onClick={() => setOpen(false)}
         style={{
@@ -185,7 +185,7 @@ export default function Layout({ children }) {
         }}
       />
 
-      {/* Main */}
+      {}
       <main className="main baruk-main">
         <div className="content">{children}</div>
       </main>
@@ -193,7 +193,7 @@ export default function Layout({ children }) {
   );
 }
 
-/* ===== Badge de nível (segue sua paleta marrom+dourado) ===== */
+
 function badgeLevelStyle(levelKey) {
   const bg = {
     bronze: "linear-gradient(135deg,#caa07a,#f1d1b0)",

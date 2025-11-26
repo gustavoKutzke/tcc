@@ -11,7 +11,7 @@ const XP_VALUES = {
   GOAL_SEASON_BONUS: 10,
 };
 
-// calcula XP base igual ao front
+
 function computeBaseXpForGoal(goal) {
   const value = Number(goal.points || 0);
   const isPdi = !!goal.isPdi || !!goal.pdiPlanId;
@@ -47,7 +47,7 @@ exports.onGoalUpdated = onDocumentUpdated("goals/{goalId}", async (event) => {
   const userRef = db.collection("users").doc(ownerUid);
   const logRef = db.collection("xpLog");
 
-  // ✅ caso 1: aberta -> concluída
+  //  caso 1: aberta -> concluída
   if (wasOpen && isDone && !before.completedAt && after.completedAt) {
     await userRef.update({
       points: admin.firestore.FieldValue.increment(baseXp),
@@ -68,7 +68,7 @@ exports.onGoalUpdated = onDocumentUpdated("goals/{goalId}", async (event) => {
     return;
   }
 
-  // ✅ caso 2: concluída -> aberta (reabriu)
+  //  caso 2: concluída -> aberta (reabriu)
   if (wasDone && isOpen && before.completedAt && !after.completedAt) {
     const penalty = -Math.abs(baseXp);
 

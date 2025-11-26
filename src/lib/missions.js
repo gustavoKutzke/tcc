@@ -5,7 +5,7 @@ import {
 import { startOfWeek, endOfWeek } from "./week";
 
 /**
- * Missões semanais disponíveis.
+ * Missões semanais
  */
 export const WEEKLY_MISSIONS = [
   {
@@ -34,13 +34,13 @@ export const WEEKLY_MISSIONS = [
   },
 ];
 
-/* ========== Calculadores de progresso (sem precisar de backend) ========== */
+/*Calculadores de progresso*/
 
 async function progressKudosSent(db, uid) {
   const start = startOfWeek();
   const end = endOfWeek();
 
-  // Pega últimos 200 kudos enviados e filtra no cliente pela data
+  
   let snap;
   try {
     snap = await getDocs(

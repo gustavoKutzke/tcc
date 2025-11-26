@@ -4,10 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { collection, doc, getDoc, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
-/**
- * Folha PDI – página dedicada à impressão/PDF (A4 paisagem)
- * HTML + CSS focados em qualidade de impressão.
- */
+
 export default function PDIPrint() {
   const { planId } = useParams();
   const navigate = useNavigate();
@@ -25,7 +22,7 @@ export default function PDIPrint() {
       const p = { id: snap.id, ...snap.data() };
       setPlan(p);
 
-      // Nome do colaborador: do plano ou fallback no /users/{ownerUid}
+      // Nome do colaborador
       const fromPlan =
         (p.collaboratorName && String(p.collaboratorName).trim()) ||
         (p.ownerName && String(p.ownerName).trim());
@@ -45,7 +42,7 @@ export default function PDIPrint() {
       }
     });
 
-    // Ouve linhas do plano
+    
     const unsub = onSnapshot(
       query(collection(db, "pdiPlans", planId, "items"), orderBy("createdAt", "asc")),
       (snap) => setItems(snap.docs.map((d) => ({ id: d.id, ...(d.data() || {}) })))
@@ -100,7 +97,7 @@ export default function PDIPrint() {
         {/* Título tabela */}
         <div className="block-title">PLANO DE DESENVOLVIMENTO</div>
 
-        {/* Cabeçalho da grade (com numeração e Execução dividida) */}
+        {/* Cabeçalho da grade*/}
         <div className="grid header">
           <div className="col-n">#</div>
           <div>Ponto de desenvolvimento</div>
@@ -191,7 +188,7 @@ export default function PDIPrint() {
   );
 }
 
-/* ===== Helpers ===== */
+
 function labelStatus(k) {
   const map = {
     nao_iniciada: "Não iniciada",
@@ -223,7 +220,7 @@ function buildCheckpoints(start, end, followUp) {
   }
 }
 
-/* ===== CSS (scoped) ===== */
+/*CSS*/
 const styles = `
 .pdi-print-wrap {
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;

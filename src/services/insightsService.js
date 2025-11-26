@@ -9,10 +9,10 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-// Importa só o que realmente é usado neste arquivo
+
 import { getMonthRange, enumerateDays, isoDate } from "../utils/dateUtils";
 
-/* ===== Carrega times existentes (para o filtro) ===== */
+
 
 export async function loadTeams() {
   const snap = await getDocs(query(collection(db, "users"), orderBy("name")));
@@ -24,17 +24,17 @@ export async function loadTeams() {
     if (t) ts.add(t);
   });
 
-  return Array.from(ts); // a página decide se coloca "all" ou não
+  return Array.from(ts);
 }
 
-/* ===== Cálculo principal de insights (metas + kudos) ===== */
+/*Cálculo principal de insights*/
 
 export async function loadInsightsForManager({ month, team = "all" }) {
   const { start, end } = getMonthRange(month);
   const startTs = Timestamp.fromDate(start);
   const endTs = Timestamp.fromDate(end);
 
-  // ---- USERS ----
+  
   const snapUsers = await getDocs(query(collection(db, "users")));
   const users = snapUsers.docs.map((d) => ({ uid: d.id, ...(d.data() || {}) }));
   const usersMap = new Map(users.map((u) => [u.uid, u]));
@@ -45,7 +45,7 @@ export async function loadInsightsForManager({ month, team = "all" }) {
     return (u?.team || "") === team;
   };
 
-  // ---- GOALS (metas concluídas no mês) ----
+  //GOALS (metas concluídas no mês)
   let qGoals = query(
     collection(db, "goals"),
     where("completedAt", ">=", startTs),
@@ -57,7 +57,7 @@ export async function loadInsightsForManager({ month, team = "all" }) {
   try {
     snapGoals = await getDocs(qGoals);
   } catch {
-    // fallback sem orderBy (caso índice/regras deem erro)
+    
     qGoals = query(
       collection(db, "goals"),
       where("completedAt", ">=", startTs),
@@ -113,7 +113,7 @@ export async function loadInsightsForManager({ month, team = "all" }) {
     })
   );
 
-  // ---- KUDOS (por monthKey) ----
+  //KUDOS
   let qKudos = query(
     collection(db, "kudos"),
     where("monthKey", "==", month),
@@ -133,7 +133,7 @@ export async function loadInsightsForManager({ month, team = "all" }) {
     ...(d.data() || {}),
   }));
 
-  // filtra por time (quem enviou ou quem recebeu)
+  // filtra por time
   const kudosRows = kudosRowsRaw.filter(
     (k) => includeByTeam(k.toUid) || includeByTeam(k.fromUid)
   );
@@ -141,8 +141,8 @@ export async function loadInsightsForManager({ month, team = "all" }) {
   let kudosCount = 0;
   let kudosValueSum = 0;
 
-  const byRecognized = new Map(); // quem recebe
-  const bySupporters = new Map(); // quem envia
+  const byRecognized = new Map(); 
+  const bySupporters = new Map(); 
   const dayMapKudos = new Map(days.map((d) => [d, 0]));
 
   kudosRows.forEach((k) => {
@@ -198,7 +198,7 @@ export async function loadInsightsForManager({ month, team = "all" }) {
     })
   );
 
-  // ---- Rankings (top 10) ----
+  //ankings
   const topScorers = Array.from(byUserPoints.values())
     .sort((a, b) => b.points - a.points)
     .slice(0, 10);
@@ -211,7 +211,7 @@ export async function loadInsightsForManager({ month, team = "all" }) {
     .sort((a, b) => b.value - a.value)
     .slice(0, 10);
 
-  // ---- KPIs gerais ----
+  //KPIs gerais
   const usersCount = users.filter((u) =>
     team === "all" ? true : (u.team || "") === team
   ).length;

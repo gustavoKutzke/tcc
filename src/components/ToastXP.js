@@ -8,7 +8,7 @@ export function ToastXPProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const [myUid, setMyUid] = useState(null);
 
-  // pega uid atual
+  
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((u) => {
       setMyUid(u?.uid || null);
@@ -29,13 +29,13 @@ export function ToastXPProvider({ children }) {
     }, 3000);
   }
 
-  // ✅ escuta eventos disparados pelo xpService
+  
   useEffect(() => {
     function handler(e) {
       const detail = e?.detail || {};
       const { uid, points, source } = detail;
 
-      // só mostra se for do usuário logado (quando souber)
+      
       if (myUid && uid && uid !== myUid) return;
 
       if (points && points > 0) {
@@ -43,16 +43,16 @@ export function ToastXPProvider({ children }) {
       }
     }
 
-    // evento global
+    
     window.addEventListener("xp-earned", handler);
 
-    // evento específico por uid (extra seguro)
+   
     const specificEvent = myUid ? `xp-earned:${myUid}` : null;
     if (specificEvent) {
       window.addEventListener(specificEvent, handler);
     }
 
-    // fallback: expõe função global pra xpService chamar se quiser
+    
     window.showToastXP = ({ uid, points, source }) => {
       if (myUid && uid && uid !== myUid) return;
       if (points && points > 0) showXpToast({ points, source });
@@ -63,7 +63,7 @@ export function ToastXPProvider({ children }) {
       if (specificEvent) {
         window.removeEventListener(specificEvent, handler);
       }
-      // limpa global se quiser
+      
       try { delete window.showToastXP; } catch {}
     };
   }, [myUid]);

@@ -1,19 +1,19 @@
 // functions/__tests__/xp.test.js
 
-// 1) Mock de firebase-functions: https.onRequest só devolve o handler
+// Mock de firebase-functions: https.onRequest só devolve o handler
 jest.mock("firebase-functions", () => ({
   https: {
     onRequest: (handler) => handler,
   },
 }));
 
-// 2) Mocks globais (nomes começando com "mock" pra evitar erro do Jest)
+// Mocks globais (nomes começando com "mock" pra evitar erro do Jest)
 const mockUpdate = jest.fn();
 const mockAdd = jest.fn();
 const mockIncrement = jest.fn((n) => n);
 const mockServerTimestamp = jest.fn(() => "NOW");
 
-// 3) Mock de firebase-admin
+// Mock de firebase-admin
 jest.mock("firebase-admin", () => {
   const mockCollection = jest.fn((name) => {
     if (name === "users") {
@@ -49,7 +49,7 @@ jest.mock("firebase-admin", () => {
   };
 });
 
-// 4) IMPORTA O MÓDULO DEPOIS dos mocks
+//IMPORTA O MÓDULO DEPOIS dos mocks
 const { grantXp } = require("../xp");
 
 // helper simples de response fake (imitando Express)
@@ -79,7 +79,7 @@ describe("xp.grantXp (Cloud Function)", () => {
   test("retorna 400 se faltar uid ou points", async () => {
     const req = {
       method: "POST",
-      body: { uid: "u1" }, // sem points
+      body: { uid: "u1" }, 
     };
     const res = makeRes();
 

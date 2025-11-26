@@ -260,7 +260,7 @@ describe("pdiService", () => {
       { status: "concluida" },
     ];
     const pct = calculateProgressFromItems(items);
-    expect(pct).toBe(67); // 2/3 -> 66.66 -> 67
+    expect(pct).toBe(67); 
   });
 
   test("syncPlanProgress retorna 0 se planId for falsy e não chama updateDoc", async () => {

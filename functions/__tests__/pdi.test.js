@@ -1,4 +1,4 @@
-// Mock do firebase-admin para não precisar de initializeApp()
+
 jest.mock("firebase-admin", () => {
   const FieldValue = {
     increment: (value) => ({ __op: "increment", value }),
@@ -7,14 +7,14 @@ jest.mock("firebase-admin", () => {
 
   return {
     firestore: () => ({
-      // não usamos esse db global nos testes, mas precisa existir
+
       collection: jest.fn(),
       FieldValue,
     }),
   };
 });
 
-// Mock do firebase-functions/v2/firestore (evita dependência real)
+// Mock do firebase
 jest.mock("firebase-functions/v2/firestore", () => ({
   onDocumentUpdated: jest.fn((path, handler) => handler),
 }));

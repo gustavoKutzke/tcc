@@ -6,7 +6,7 @@ const db = admin.firestore();
 
 exports.grantXp = functions.https.onRequest(async (req, res) => {
   try {
-    // Aceita GET (query) ou POST (body)
+    // Aceita GET  ou POST 
     const data = req.method === "POST" ? req.body : req.query;
 
     const uid = data.uid;
@@ -22,12 +22,12 @@ exports.grantXp = functions.https.onRequest(async (req, res) => {
       return res.status(400).json({ error: "points precisa ser número ≠ 0" });
     }
 
-    // 1) incrementa XP
+    // incrementa XP
     await db.collection("users").doc(uid).update({
       points: admin.firestore.FieldValue.increment(numericPoints),
     });
 
-    // 2) cria log
+    //cria log
     await db.collection("xpLog").add({
       uid,
       source,

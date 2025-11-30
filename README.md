@@ -58,4 +58,6 @@ Desenvolvida como uma **Single Page Application (SPA)** em React, integrada ao *
  5. **Acesse no navegador**:
     ```bash
     http://localhost:3000
-https://www.youtube.com/watch?v=H-6urKKgx8c
+    
+📚 Documentação Completa
+Para detalhes sobre a arquitetura, regras de negócio e o projeto completo, acesse nossa Wiki: 👉 Link para a Wiki do Projeto https://github.com/gustavoKutzke/tcc/wiki
